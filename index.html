@@ -389,7 +389,14 @@ a { color: inherit; text-decoration: none; }
   height: calc(41.56cqw + var(--reel-headroom));
   margin-top: calc(-1 * var(--reel-headroom));
   overflow: hidden;
+  /* That negative margin pulls the reel's box up over the CTA above it.
+     The extended strip is empty, so the reel itself must not swallow
+     clicks — only the cards and the pause control take pointer events. */
+  pointer-events: none;
 }
+
+.reel__item,
+.reel__toggle { pointer-events: auto; }
 
 .reel__stage {
   position: absolute;
