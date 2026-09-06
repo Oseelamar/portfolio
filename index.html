@@ -1,0 +1,2289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collins Abudu — Product Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&family=Geist:wght@100..900&family=Geist+Mono:wght@400&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+<!-- Arms the reveals before first paint, so tagged content is never shown
+     and then hidden. Without this the page simply renders fully visible. -->
+<script>if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('js-motion');</script>
+<style>
+/* ============================================================
+   Design tokens
+   ============================================================ */
+:root {
+  /* Colors */
+  --color-page:            #fef5f3;
+  --color-ink:             #171715;
+  --color-muted:           #958e7c;
+  --color-accent:          #fd540b;
+  --color-accent-border:   #e44a03;
+  --color-accent-shade:    #cf4100;
+  --color-accent-tint:     #ffb898;
+  --color-dot-muted:       #d9d9d9;
+  --color-dot-light:       #fffef8;
+  --color-on-accent:       #ffffff;
+  --color-nav-surface:     rgba(221, 214, 214, 0.5);
+  --color-body:            #4c4c4a;
+  --color-surface:         #ffffff;
+  --color-tile-neutral:    #e3e3e3;
+  --color-tile-jitter:     #7a40ed;
+  --color-tile-claude:     #d77655;
+  --color-tile-illustrator:#330000;
+  --color-note-blue:       #acd1ec;
+  --color-note-orange:     #faa823;
+  --color-note-cream:      #f8ebd8;
+  --color-note-ink:        #062134;
+  --color-tag:             #4c4c48;
+  --color-rule:            rgba(255, 255, 255, 0.3);
+  --color-link:            #ff570e;
+  --color-pending:         #b9b9b9;
+  --color-tag-surface:     #ededed;
+  --color-tag-text:        #6d6a60;
+  --gradient-statement:    linear-gradient(180deg, #fff7f5 0%, #ffffff 74.052%, #ffffff 100%);
+
+  /* Typography */
+  --font-display:  "Nanum Myeongjo", "Times New Roman", serif;
+  --font-mono:     "Fragment Mono", "Courier New", monospace;
+  --font-editorial: "PP Editorial New", "Nanum Myeongjo", "Times New Roman", serif;
+  --font-sans:     "Geist", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-sans-mono: "Geist Mono", "Courier New", monospace;
+
+  --fs-display:   120px;
+  --fs-brand:     24px;
+  --fs-lead:      24px;
+  --fs-section:   88px;
+  --fs-quote:     72px;
+  --fs-item:      36px;
+  --fs-body:      16px;
+  --fs-nav:       14px;
+
+  --lh-display:   124px;
+  --lh-lead:      1.64;
+  --lh-section:   96px;
+  --lh-quote:     96px;
+  --lh-item:      56px;
+  --ls-display:   -4.8px;
+  --ls-brand:     -0.48px;
+  --ls-lead:      -0.6px;
+  --ls-section:   -4.4px;
+  --ls-quote:     -3.6px;
+  --ls-item:      -2.16px;
+  --ls-desc:      -0.4px;
+
+  /* Spacing */
+  --space-1:   6px;
+  --space-2:   8px;
+  --space-3:   16px;
+  --space-4:   20px;
+  --space-5:   24px;
+  --space-6:   28px;
+  --space-7:   32px;
+  --space-8:   72px;
+  --space-9:   140px;
+
+  /* Radii */
+  --radius-nav:        21px;
+  --radius-pill:       44px;
+  --radius-pill-inner: 41px;
+
+  /* Shadows */
+  --shadow-cta: inset 0 -2px 4px 0 var(--color-accent-shade),
+                inset 0 2px 4px 0 var(--color-accent-tint);
+
+  /* Layout */
+  --frame-width: 1440px;
+  --nav-pad-x: var(--space-5);
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background-color: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+/* ============================================================
+   Block: page
+   ============================================================ */
+.page {
+  position: relative;
+  width: 100%;
+  max-width: var(--frame-width);
+  margin: 0 auto;
+  /* clip, not hidden: `hidden` would make this a scroll container and break
+     position:sticky for the pinned notes sequence inside it. */
+  overflow-x: clip;
+}
+
+/* ============================================================
+   Block: navbar
+   ============================================================ */
+.navbar {
+  position: fixed;
+  top: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-8);
+  width: calc(100% - 48px);
+  max-width: 693px;
+  min-height: 64px;
+  padding: var(--space-4) var(--nav-pad-x);
+  border-radius: var(--radius-nav);
+  background-color: var(--color-nav-surface);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+/* The wrapper only groups the links and socials for the mobile panel —
+   on desktop its children sit directly on the navbar's flex row. */
+.navbar__menu { display: contents; }
+
+.navbar__brand {
+  position: absolute;
+  top: 50%;
+  left: var(--nav-pad-x);
+  transform: translateY(-50%);
+  font-family: var(--font-editorial);
+  font-weight: 200;
+  font-size: var(--fs-brand);
+  line-height: 1;
+  letter-spacing: var(--ls-brand);
+  color: var(--color-ink);
+  text-align: center;
+}
+
+.navbar__toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.navbar__toggle-bar {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  margin: 0 auto;
+  background-color: var(--color-ink);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.navbar__toggle-bar + .navbar__toggle-bar { margin-top: 5px; }
+
+.navbar__toggle[aria-expanded="true"] .navbar__toggle-bar:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.navbar__toggle[aria-expanded="true"] .navbar__toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+.navbar__toggle[aria-expanded="true"] .navbar__toggle-bar:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+.navbar__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-7);
+}
+
+.navbar__link {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--fs-nav);
+  line-height: normal;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.navbar__social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.navbar__social-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* ============================================================
+   Block: hero
+   ============================================================ */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-9) 0 7px;
+  overflow: hidden;
+}
+
+.hero__backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.hero__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.hero__eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.hero__eyebrow-text {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--fs-body);
+  line-height: normal;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.hero__eyebrow-dot {
+  flex-shrink: 0;
+  width: var(--space-1);
+  height: var(--space-1);
+  border-radius: 50%;
+  background-color: var(--color-dot-muted);
+}
+
+.hero__title {
+  margin: 0;
+  max-width: 1036px;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  color: var(--color-ink);
+  text-align: center;
+}
+
+/* ============================================================
+   Block: cta
+   ============================================================ */
+/* Figma draws the stroke inside the frame bounds, so an inset ring is used
+   instead of a border, which would add 2px to the button's width and height. */
+.cta {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1px;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--color-accent-border);
+}
+
+.cta__inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-7);
+  border-radius: var(--radius-pill-inner);
+  background-color: var(--color-accent);
+  box-shadow: var(--shadow-cta);
+}
+
+.cta__dot {
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--color-dot-light);
+}
+
+.cta__label {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--fs-body);
+  line-height: normal;
+  color: var(--color-on-accent);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Block: reel (angled infinite artwork carousel)
+
+   Transforms are split across nested elements so they never overwrite
+   one another: stage holds the row angle, track holds the scroll
+   position, item holds the resting perspective, art holds hover.
+   ============================================================ */
+/* Sized in container units so the row keeps the same proportions at every
+   width, the way the collage it replaces did. The height covers the item,
+   the vertical spread the row angle adds, and the hover lift. */
+.reel {
+  --reel-w: 18.9cqw;      /* stamp width */
+  --reel-pitch: 10.2cqw;  /* step between items: 0.597 of rendered width, as in the design */
+
+  /* Row axis and item pose are measured from the Figma collage, and are
+     deliberately opposed: the row climbs to the right while each item's
+     surface slants down to the right. */
+  --reel-tilt: -9.14deg;  /* row axis: mean step 149.22 x -24.00 */
+  --reel-slant: 25.02deg; /* item rotation, from the Figma transform */
+  --reel-skew: 25.02deg;
+  --reel-squash: 0.91;
+  --reel-lift: 1.67cqw;
+  --reel-headroom: 4.9cqw;
+
+  container-type: inline-size;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  /* The row fills its 41.56cqw band exactly, as in the design, so the box is
+     extended upward into the empty gap above and pulled back by the same
+     amount. That buys headroom for the hover lift without moving the row,
+     changing the hero's height, or clipping the artwork. */
+  height: calc(41.56cqw + var(--reel-headroom));
+  margin-top: calc(-1 * var(--reel-headroom));
+  overflow: hidden;
+}
+
+.reel__stage {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  /* Biased up a little: the hover lift only travels upward, so the spare
+     room is worth more above the row than below it. */
+  transform: translateY(calc(-50% + 1.9cqw)) rotate(var(--reel-tilt));
+}
+
+.reel__track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  will-change: transform;
+}
+
+/* The item is the untransformed hover target and layout box, so the pose
+   below never fights the track's movement or the row's angle. */
+.reel__item {
+  flex: none;
+  width: var(--reel-w);
+  margin-right: calc(var(--reel-pitch) - var(--reel-w));
+}
+
+/* Cards sit on a shelf viewed at an angle: the lower-left card is nearest,
+   each one further up-right sits behind it. Painting order runs the opposite
+   way to DOM order, so the depth is assigned as descending z-index in
+   layout() — including on the cloned sequences, which keeps the order
+   correct across the loop boundary. Hover must not disturb it. */
+
+.reel__art {
+  /* The row's angle is cancelled first, so the item's own slant is applied
+     in screen space and stays independent of the row's direction. */
+  --art-pose:
+    rotate(calc(var(--reel-slant) - var(--reel-tilt)))
+    skewX(var(--reel-skew))
+    scaleY(var(--reel-squash));
+
+  position: relative;
+  width: 100%;
+  aspect-ratio: 420 / 318;
+  transform: var(--art-pose);
+  /* drop-shadow, not box-shadow: it follows the stamp's scalloped alpha
+     instead of boxing it off. The offset is given in the card's own space,
+     which the pose maps to very nearly straight down on screen. */
+  filter: drop-shadow(0 5px 7px rgba(23, 23, 21, 0.11));
+  transition: transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Hover raises the card straight out of its slot: vertical translation only,
+   applied outside the pose so size and angle are untouched. The vector is
+   pre-rotated by the row angle (sin/cos of 9.14 degrees) so "up" is screen-up
+   rather than diagonally along the card's own axis. */
+.reel__item:hover .reel__art {
+  transform:
+    translate(calc(var(--reel-lift) * 0.1588), calc(var(--reel-lift) * -0.9873))
+    var(--art-pose);
+}
+
+.reel__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.reel__photo {
+  position: absolute;
+  left: 6.667%;    /* 28 / 420 */
+  top: 8.805%;     /* 28 / 318 */
+  width: 86.667%;  /* 364 / 420 */
+  height: 82.390%; /* 262 / 318 */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.reel__toggle {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  z-index: 3;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  cursor: pointer;
+  opacity: 0.45;
+  transition: opacity 200ms ease;
+}
+
+.reel__toggle:hover,
+.reel__toggle:focus-visible { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reel__art { transition: none; }
+  .reel__toggle { display: none; }
+}
+
+/* ============================================================
+   Block: statement
+   ============================================================ */
+.statement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 88px 120px;
+  background: var(--gradient-statement);
+}
+
+.statement__text {
+  margin: 0;
+  flex: 1 0 0;
+  min-width: 0;
+  max-width: 586px;
+  font-family: var(--font-sans);
+  font-weight: 325;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+  letter-spacing: var(--ls-lead);
+  color: var(--color-body);
+}
+
+/* ============================================================
+   Block: projects
+   ============================================================ */
+.projects {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 96px;
+  padding: 120px 119px;
+  background-color: var(--color-surface);
+}
+
+.projects__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+}
+
+.projects__eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: normal;
+  color: var(--color-muted);
+}
+
+.projects__title {
+  width: 617px;
+  max-width: 100%;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 72px;
+  line-height: 88px;
+  letter-spacing: -2.88px;
+  color: var(--color-ink);
+}
+
+.projects__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 156px;
+  width: 100%;
+}
+
+.projects__row {
+  display: flex;
+  align-items: center;
+  gap: 33px;
+  width: 100%;
+}
+
+.project {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/* Figma gives the first card slightly looser spacing than the other seven. */
+.project--lead { gap: 28px; }
+
+.project__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 584.5 / 356;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.project__info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.project__heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.project--lead .project__heading { gap: 12px; }
+
+.project__name {
+  flex: 1 0 0;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 44px;
+  line-height: 56px;
+  letter-spacing: -2.64px;
+  color: var(--color-ink);
+}
+
+.project__link {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: normal;
+  color: var(--color-link);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.project__link--pending { color: var(--color-pending); }
+
+.project__arrow {
+  width: 20px;
+  height: 20px;
+}
+
+.project__tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project__tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 30px;
+  background-color: var(--color-tag-surface);
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--fs-nav);
+  line-height: normal;
+  color: var(--color-tag-text);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Block: stack
+   ============================================================ */
+.stack {
+  --tile-size: 120px;
+  --icon-scale: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 160px;
+  padding: 120px;
+  background-color: var(--color-surface);
+}
+
+.stack__heading {
+  flex: 1 0 0;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-section);
+  line-height: var(--lh-section);
+  letter-spacing: var(--ls-section);
+  color: var(--color-ink);
+}
+
+.stack__list {
+  flex: 1 0 0;
+  min-width: 0;
+  max-width: 464px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 48px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stack__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  width: 100%;
+}
+
+.stack__tile {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tile-size);
+  height: var(--tile-size);
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.stack__tile--neutral     { background-color: var(--color-tile-neutral); }
+.stack__tile--jitter      { background-color: var(--color-tile-jitter); }
+.stack__tile--claude      { background-color: var(--color-tile-claude); }
+.stack__tile--illustrator { background-color: var(--color-tile-illustrator); }
+
+.stack__icon--figma       { width: calc(54px * var(--icon-scale)); height: calc(80px * var(--icon-scale)); }
+.stack__icon--framer      { width: calc(53px * var(--icon-scale)); height: calc(80px * var(--icon-scale)); }
+.stack__icon--jitter      { width: calc(82px * var(--icon-scale)); height: calc(28px * var(--icon-scale)); }
+.stack__icon--claude      { width: calc(80px * var(--icon-scale)); height: calc(80px * var(--icon-scale)); }
+.stack__icon--notion      { width: calc(76px * var(--icon-scale)); height: calc(80px * var(--icon-scale)); }
+.stack__icon--illustrator { width: calc(83px * var(--icon-scale)); height: calc(80px * var(--icon-scale)); }
+
+.stack__body {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.stack__name {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-item);
+  line-height: var(--lh-item);
+  letter-spacing: var(--ls-item);
+  color: var(--color-ink);
+}
+
+.stack__desc {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-weight: 325;
+  font-size: var(--fs-body);
+  line-height: var(--lh-lead);
+  letter-spacing: var(--ls-desc);
+  color: var(--color-body);
+}
+
+/* ============================================================
+   Block: quote
+   ============================================================ */
+.quote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 160px 120px;
+  background-color: var(--color-surface);
+}
+
+.quote__text {
+  flex: 1 0 0;
+  min-width: 0;
+  max-width: 990px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-quote);
+  line-height: var(--lh-quote);
+  letter-spacing: var(--ls-quote);
+  color: var(--color-ink);
+  text-align: center;
+}
+
+.quote__text p { margin: 0; }
+
+/* ============================================================
+   Block: notes (rotated paper collage)
+   ============================================================ */
+.notes {
+  /* The collage is authored on a fixed frame and scaled to fit; phones use a
+     different frame, so its size drives the canvas, height and pin offset. */
+  --notes-w: 1440;
+  --notes-h: 900;
+
+  position: relative;
+  height: calc(var(--notes-h) * 1px * var(--collage-scale, 1));
+  overflow: hidden;
+  background-color: var(--color-surface);
+}
+
+.notes__canvas {
+  position: relative;
+  width: calc(var(--notes-w) * 1px);
+  height: calc(var(--notes-h) * 1px);
+  transform: scale(var(--collage-scale, 1));
+  transform-origin: top left;
+}
+
+/* Pinned entrance: the section becomes a scroll track and the pin holds the
+   collage still while the three cards arrive. Only added by script, so
+   without JS or under reduced motion the section renders as it always has. */
+.notes--pinned {
+  height: var(--notes-track, 260vh);
+  overflow: visible;
+}
+
+.notes--pinned .notes__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.notes--pinned .notes__canvas {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: calc(var(--notes-h) * -0.5px * var(--collage-scale, 1));
+}
+
+/* Scroll-linked, so these must not also carry a transition of their own. */
+.notes--pinned .notes__item { transition: none; }
+
+.notes__item {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--bbox-w);
+  height: var(--bbox-h);
+}
+
+.notes__item--about {
+  --bbox-w: 453.759px;
+  --bbox-h: 423.286px;
+  left: calc(8.33% + 130px);
+  top: 150px;
+}
+
+.notes__item--motto {
+  --bbox-w: 460.564px;
+  --bbox-h: 328.345px;
+  right: calc(8.33% + 159.19px);
+  top: 198px;
+}
+
+.notes__item--tags {
+  --bbox-w: 170.249px;
+  --bbox-h: 161.55px;
+  left: calc(33.33% + 84px);
+  bottom: 209.45px;
+}
+
+.note {
+  position: relative;
+  flex: none;
+  transform: rotate(var(--note-rotate)) scale(var(--note-scale, 1));
+}
+
+.note--blue {
+  --note-rotate: 7deg;
+  width: 411px;
+  height: 376px;
+  background-color: var(--color-note-blue);
+}
+
+.note--orange {
+  --note-rotate: -10deg;
+  width: 422px;
+  height: 259px;
+  background-color: var(--color-note-orange);
+}
+
+.note--cream {
+  --note-rotate: 11deg;
+  width: 147px;
+  height: 136px;
+  overflow: hidden;
+  background-color: var(--color-note-cream);
+}
+
+.note__tear {
+  position: absolute;
+  left: 0;
+  top: 299px;
+  width: 411px;
+  height: 103px;
+}
+
+.note__fold {
+  position: absolute;
+  left: 369px;
+  top: 0;
+  width: 42px;
+}
+
+.note__fold--back  { height: 35.5px; }
+.note__fold--front { height: 27px; }
+
+.note__body {
+  position: absolute;
+  left: 28px;
+  top: 176px;
+  transform: translateY(-50%);
+  width: 355px;
+  margin: 0;
+  font-family: var(--font-sans-mono);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 40px;
+  letter-spacing: -0.6px;
+  text-transform: lowercase;
+  color: var(--color-note-ink);
+}
+
+.note__spiral {
+  position: absolute;
+  left: 24px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.note__ring {
+  width: 28px;
+  height: 30px;
+}
+
+.note__lines {
+  position: absolute;
+  left: 24px;
+  top: 64px;
+  width: 374px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.note__line {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 2px 0;
+  border-bottom: 1.5px solid var(--color-rule);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 56px;
+  letter-spacing: -0.96px;
+  color: var(--color-on-accent);
+  white-space: nowrap;
+}
+
+.note__tags {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  width: 97px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note__tag {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--fs-nav);
+  line-height: normal;
+  color: var(--color-tag);
+  white-space: nowrap;
+}
+
+.note__bullet {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  background-color: var(--color-ink);
+}
+
+/* ============================================================
+   Block: closing
+   ============================================================ */
+.closing {
+  display: flex;
+  justify-content: center;
+  padding: 120px 24px;
+  background-color: var(--color-surface);
+}
+
+/* Figma left-aligns this block inside 322px padding rather than centring it,
+   which sits it 8px left of the frame's midline; the right margin reproduces
+   that offset without pinning the block to a 1440px-only padding value. */
+.closing__inner {
+  flex: 0 1 780px;
+  min-width: 0;
+  margin-right: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 46px;
+}
+
+.closing__title {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-section);
+  line-height: var(--lh-section);
+  letter-spacing: var(--ls-section);
+  color: var(--color-ink);
+  text-align: center;
+}
+
+/* ============================================================
+   Block: footer
+   ============================================================ */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 120px;
+  background-color: var(--color-surface);
+}
+
+.footer__credit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer__mark {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+/* Figma ships the mark at two sizes with the same 1.5px stroke, so the
+   smaller one is its own file rather than the large one scaled down. */
+.footer__mark--sm { display: none; }
+
+.footer__text {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: normal;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.footer__social {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.footer__icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================================
+   Motion
+
+   Reveals are armed by the `js-motion` class, which is only set when
+   scripting is available and reduced motion is not requested — so the page
+   is fully visible and static in either of those cases.
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+.js-motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 640ms cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms),
+    transform 640ms cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms);
+}
+
+.js-motion [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hover polish — all restrained, all reversible. */
+.navbar__link,
+.project__link { transition: color 200ms ease; }
+
+.navbar__link:hover { color: var(--color-ink); }
+
+.navbar__social a,
+.footer__social a { transition: opacity 200ms ease; }
+
+.navbar__social a:hover,
+.footer__social a:hover { opacity: 0.6; }
+
+.cta__inner { transition: transform 250ms ease, filter 250ms ease; }
+
+.cta:hover .cta__inner {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+
+.project__arrow { transition: transform 250ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+.project__link:hover .project__arrow { transform: translateX(3px); }
+
+/* The wrapper clips the zoom to the card's rounded corners. */
+.project__media {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.project__image { transition: transform 600ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+
+.project:hover .project__image { transform: scale(1.03); }
+
+.stack__tile { transition: transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+.stack__item:hover .stack__tile { transform: translateY(-3px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar__link,
+  .project__link,
+  .navbar__social a,
+  .footer__social a,
+  .cta__inner,
+  .project__arrow,
+  .project__image,
+  .stack__tile { transition: none; }
+
+  .cta:hover .cta__inner,
+  .project:hover .project__image,
+  .project__link:hover .project__arrow,
+  .stack__item:hover .stack__tile { transform: none; }
+}
+
+/* ============================================================
+   Tablet — max-width: 1024px
+   ============================================================ */
+@media (max-width: 1024px) {
+  :root {
+    --fs-display: 76px;
+    --lh-display: 80px;
+    --ls-display: -3.04px;
+    --space-9: 148px;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+    column-gap: var(--space-4);
+    row-gap: 0;
+    max-width: 693px;
+  }
+
+  .navbar__brand {
+    top: var(--space-4);
+    transform: none;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    text-align: left;
+  }
+
+  .navbar__toggle {
+    display: block;
+    order: 2;
+  }
+
+  .navbar__menu {
+    order: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: max-height 0.35s ease, opacity 0.25s ease,
+                margin-top 0.35s ease, visibility 0s linear 0.35s;
+  }
+
+  .navbar__menu.is-open {
+    max-height: 320px;
+    margin-top: var(--space-4);
+    opacity: 1;
+    visibility: visible;
+    transition: max-height 0.35s ease, opacity 0.25s ease 0.05s,
+                margin-top 0.35s ease, visibility 0s linear 0s;
+  }
+
+  .navbar__nav {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .navbar__social {
+    justify-content: center;
+  }
+
+  .statement { padding: 72px 64px; }
+
+  .projects {
+    gap: 64px;
+    padding: 88px 64px;
+  }
+
+  .projects__title {
+    font-size: 48px;
+    line-height: 60px;
+    letter-spacing: -1.92px;
+  }
+
+  .projects__grid { gap: 96px; }
+
+  .projects__row { gap: 24px; }
+
+  .project__name {
+    font-size: 30px;
+    line-height: 40px;
+    letter-spacing: -1.8px;
+  }
+
+  .project__link { font-size: 14px; }
+
+  .project__tags { gap: 12px; }
+
+  .stack {
+    gap: 64px;
+    padding: 88px 64px;
+  }
+
+  .stack__heading {
+    font-size: 56px;
+    line-height: 64px;
+    letter-spacing: -2.8px;
+  }
+
+  .quote { padding: 120px 64px; }
+
+  .quote__text {
+    font-size: 48px;
+    line-height: 64px;
+    letter-spacing: -2.4px;
+  }
+
+  .closing {
+    padding: 88px 64px;
+  }
+
+  .closing__inner {
+    margin-right: 0;
+    gap: 40px;
+  }
+
+  .closing__title {
+    font-size: 56px;
+    line-height: 64px;
+    letter-spacing: -2.8px;
+  }
+
+  .footer { padding: 32px 64px; }
+}
+
+/* ============================================================
+   Mobile — max-width: 768px
+   ============================================================ */
+@media (max-width: 768px) {
+  :root {
+    --fs-display: 44px;
+    --lh-display: 46px;
+    --ls-display: -1.76px;
+    --fs-body: 12px;
+    --fs-brand: 20px;
+    --space-9: 148px;
+    --space-3: 10px;
+    --space-7: 24px;
+    --nav-pad-x: 20px;
+  }
+
+  .navbar {
+    width: calc(100% - 32px);
+  }
+
+  .hero__eyebrow {
+    flex-wrap: wrap;
+    padding: 0 20px;
+  }
+
+  .hero__title { padding: 0 16px; }
+
+  .cta__inner { padding: 14px var(--space-7); }
+
+  .statement { padding: 56px 24px; }
+
+  .statement__text { font-size: 18px; letter-spacing: -0.45px; }
+
+  /* Phones get proportionally larger, tighter items so the artwork stays
+     readable instead of the whole row shrinking as one. */
+  .reel {
+    --reel-w: 44cqw;
+    --reel-pitch: 25cqw;
+    --reel-lift: 3.6cqw;
+    --reel-headroom: 6cqw;
+    height: calc(76cqw + var(--reel-headroom));
+  }
+
+  .reel__toggle {
+    right: 16px;
+    bottom: 12px;
+  }
+
+  .projects {
+    gap: 48px;
+    padding: 72px 24px;
+  }
+
+  .projects__title {
+    font-size: 36px;
+    line-height: 44px;
+    letter-spacing: -1.44px;
+  }
+
+  .projects__grid { gap: 56px; }
+
+  .projects__row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 56px;
+  }
+
+  .project__heading,
+  .project--lead .project__heading {
+    gap: 12px;
+  }
+
+  .project__name {
+    font-size: 26px;
+    line-height: 34px;
+    letter-spacing: -1.56px;
+  }
+
+  .project__link { font-size: 13px; }
+
+  .project__tags { gap: 10px; }
+
+  .project__tag {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .stack {
+    --tile-size: 88px;
+    --icon-scale: 0.733;
+    flex-direction: column;
+    gap: 40px;
+    padding: 56px 24px;
+  }
+
+  .stack__heading {
+    font-size: 40px;
+    line-height: 44px;
+    letter-spacing: -2px;
+  }
+
+  .stack__list {
+    max-width: none;
+    gap: 32px;
+  }
+
+  .stack__item { gap: 20px; }
+
+  .stack__tile { border-radius: 22px; }
+
+  .stack__name {
+    font-size: 26px;
+    line-height: 40px;
+    letter-spacing: -1.56px;
+  }
+
+  .quote { padding: 72px 24px; }
+
+  .quote__text {
+    font-size: 30px;
+    line-height: 40px;
+    letter-spacing: -1.5px;
+  }
+
+  /* Phone arrangement: orange above, blue overlapping it, tags card lower
+     right. Same pinned entrance as desktop, different resting frame. */
+  .notes {
+    --notes-w: 390;
+    --notes-h: 720;
+  }
+
+  .notes__item--motto {
+    --bbox-w: 340.448px;
+    --bbox-h: 207.728px;
+    --note-scale: 0.7725;
+    left: 25px;
+    top: 64px;
+    right: auto;
+    z-index: 1;
+  }
+
+  .notes__item--about {
+    --bbox-w: 331.498px;
+    --bbox-h: 309.248px;
+    --note-scale: 0.74;
+    left: 29.25px;
+    top: 234.88px;
+    z-index: 2;
+  }
+
+  .notes__item--tags {
+    --bbox-w: 141.729px;
+    --bbox-h: 131.448px;
+    --note-scale: 0.8367;
+    left: 208px;
+    top: 525px;
+    bottom: auto;
+    z-index: 3;
+  }
+
+  .note--blue   { --note-rotate: 6deg; }
+  .note--orange { --note-rotate: -5deg; height: 233px; }
+  .note--cream  { --note-rotate: 11deg; height: 131.5px; }
+
+  .closing {
+    padding: 72px 24px;
+  }
+
+  .closing__inner { gap: 32px; }
+
+  .closing__title {
+    font-size: 40px;
+    line-height: 44px;
+    letter-spacing: -2px;
+  }
+
+  /* Phone footer stacks and centres, socials above the credit line. */
+  .footer {
+    flex-direction: column-reverse;
+    justify-content: center;
+    gap: 24px;
+    padding: 16px 24px 24px;
+  }
+
+  .footer__social { gap: 24px; }
+
+  .footer__icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .footer__credit { gap: 8px; }
+
+  .footer__mark--lg { display: none; }
+
+  .footer__mark--sm {
+    display: block;
+    width: 18px;
+    height: 18px;
+  }
+
+  .footer__text { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+  <header class="navbar">
+    <a class="navbar__brand" href="#">Collins Abudu</a>
+
+    <button class="navbar__toggle" type="button"
+            aria-expanded="false" aria-controls="primary-menu" aria-label="Toggle navigation menu">
+      <span class="navbar__toggle-bar"></span>
+      <span class="navbar__toggle-bar"></span>
+      <span class="navbar__toggle-bar"></span>
+    </button>
+
+    <div class="navbar__menu" id="primary-menu">
+      <nav class="navbar__nav" aria-label="Primary">
+        <a class="navbar__link" href="#about">ABOUT ME</a>
+        <a class="navbar__link" href="#works">WORKS</a>
+        <a class="navbar__link" href="#book">BOOK A CALL</a>
+      </nav>
+
+      <div class="navbar__social">
+        <a href="#" aria-label="LinkedIn">
+          <img class="navbar__social-icon" src="assets/icon-linkedin.svg" alt="LinkedIn" width="20" height="20">
+        </a>
+        <a href="#" aria-label="X">
+          <img class="navbar__social-icon" src="assets/icon-x.svg" alt="X" width="20" height="20">
+        </a>
+        <a href="#" aria-label="Behance">
+          <img class="navbar__social-icon" src="assets/icon-behance.svg" alt="Behance" width="20" height="20">
+        </a>
+      </div>
+    </div>
+  </header>
+
+<div class="page">
+
+  <main>
+    <section class="hero">
+      <img class="hero__backdrop" src="assets/bg.webp" alt="" aria-hidden="true">
+
+      <div class="hero__content">
+        <div class="hero__intro">
+          <div class="hero__eyebrow">
+            <span class="hero__eyebrow-text">PRODUCT DESIGNER</span>
+            <span class="hero__eyebrow-dot" aria-hidden="true"></span>
+            <span class="hero__eyebrow-text">DESIGN // WORDS // CODE</span>
+          </div>
+
+          <h1 class="hero__title">I design. I write.<br>Sometimes build.</h1>
+        </div>
+
+        <a class="cta" href="#book">
+          <span class="cta__inner">
+            <span class="cta__dot" aria-hidden="true"></span>
+            <span class="cta__label">BOOK A CALL</span>
+          </span>
+        </a>
+      </div>
+
+      <div class="reel" role="region" aria-label="Selected interface work">
+        <div class="reel__stage">
+          <div class="reel__track">
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-01.webp" alt="Landing page for a creative sketching workspace, with a botanical illustration" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-02.webp" alt="Interior design studio landing page with a gilded framed courtyard photograph" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-03.webp" alt="Professional services landing page with an illustrated group walking forward" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-04.webp" alt="Data intelligence landing page with an orange and yellow geometric pattern" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-05.webp" alt="Industrial systems landing page with a dark precision engine render" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-06.webp" alt="Logistics platform landing page with a layered cargo tracking visualisation" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-07.webp" alt="Web3 sign-up screen with wallet connection options on black" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-08.webp" alt="Design agency landing page in bright orange with character illustrations" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-09.webp" alt="Crypto portfolio tracker landing page with three-dimensional coin renders" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-10.webp" alt="Task manager landing page with a colourful file tab illustration" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-11.webp" alt="Automated investing landing page with a red three-dimensional vault render" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-12.webp" alt="Token swap interface with an AI insights panel on a dark screen" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-13.webp" alt="Learn-to-code platform landing page with pixel-art spacecraft artwork" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-14.webp" alt="Fragrance brand landing page with a collage of stamp-shaped textures" width="728" height="509">
+              </div>
+            </div>
+            <div class="reel__item">
+              <div class="reel__art">
+                <img class="reel__frame" src="assets/stamp-frame.svg" alt="" aria-hidden="true">
+                <img class="reel__photo" src="assets/carousel-15.webp" alt="Data platform landing page with a dark precision dial interface" width="728" height="509">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="reel__toggle" type="button" aria-pressed="false" aria-label="Pause the moving artwork">PAUSE</button>
+      </div>
+    </section>
+
+    <section class="statement">
+      <p data-reveal class="statement__text">4+ years in product design, backed by 3 years in copywriting and a growing relationship with code. I turn complicated ideas into products people can understand and use.</p>
+    </section>
+
+    <section class="projects" id="works">
+      <header class="projects__header">
+        <p data-reveal class="projects__eyebrow">LIVE PROJECTS</p>
+        <h2 data-reveal class="projects__title">A Highlight of things I&rsquo;ve helped shape</h2>
+      </header>
+
+      <div class="projects__grid">
+
+        <div class="projects__row">
+          <article data-reveal class="project project--lead">
+            <div class="project__media">
+              <img class="project__image" src="assets/project-claremont.webp" alt="Claremont Armani website design" width="1169" height="723">
+            </div>
+            <div class="project__info">
+              <div class="project__heading">
+                <h3 class="project__name">Claremont Armani</h3>
+                <a class="project__link" href="https://claremontamany.com/" target="_blank" rel="noopener noreferrer">VISIT SITE<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+              </div>
+              <ul class="project__tags">
+                <li class="project__tag">2026</li>
+                <li class="project__tag">NGO</li>
+                <li class="project__tag">WEBSITE DESIGN</li>
+              </ul>
+            </div>
+          </article>
+
+          <article data-reveal class="project">
+            <div class="project__media">
+              <img class="project__image" src="assets/project-monazeni.webp" alt="Monazeni website design" width="1169" height="730">
+            </div>
+            <div class="project__info">
+              <div class="project__heading">
+                <h3 class="project__name">Monazeni</h3>
+                <a class="project__link" href="https://monazeni.com/" target="_blank" rel="noopener noreferrer">VISIT SITE<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+              </div>
+              <ul class="project__tags">
+                <li class="project__tag">2026</li>
+                <li class="project__tag">FASHION E-COMMERCE</li>
+                <li class="project__tag">WEBSITE DESIGN</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="projects__row">
+          <article data-reveal class="project">
+            <div class="project__media">
+              <img class="project__image" src="assets/project-xdna.webp" alt="xDNA website design" width="1169" height="730">
+            </div>
+            <div class="project__info">
+              <div class="project__heading">
+                <h3 class="project__name">xDNA</h3>
+                <a class="project__link" href="https://www.xdnalabs.com/" target="_blank" rel="noopener noreferrer">VISIT SITE<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+              </div>
+              <ul class="project__tags">
+                <li class="project__tag">2025</li>
+                <li class="project__tag">CRYPTO</li>
+                <li class="project__tag">WEBSITE DESIGN</li>
+              </ul>
+            </div>
+          </article>
+
+          <article data-reveal class="project">
+            <div class="project__media">
+              <img class="project__image" src="assets/project-nookly.webp" alt="Nookly website design" width="1169" height="901">
+            </div>
+            <div class="project__info">
+              <div class="project__heading">
+                <h3 class="project__name">Nookly</h3>
+                <a class="project__link" href="https://nookly.com/" target="_blank" rel="noopener noreferrer">VISIT SITE<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+              </div>
+              <ul class="project__tags">
+                <li class="project__tag">2025</li>
+                <li class="project__tag">KIDS EDUCATION</li>
+                <li class="project__tag">WEBSITE DESIGN</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="projects__row">
+          <article data-reveal class="project">
+            <div class="project__media">
+              <img class="project__image" src="assets/project-lumora.webp" alt="Lumora website design" width="1169" height="876">
+            </div>
+            <div class="project__info">
+              <div class="project__heading">
+                <h3 class="project__name">Lumora</h3>
+                <a class="project__link" href="https://www.behance.net/gallery/235567531/Lumora-Where-AI-meets-Blockchain?platform=direct" target="_blank" rel="noopener noreferrer">SEE CASE STUDY<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+              </div>
+              <ul class="project__tags">
+                <li class="project__tag">2025</li>
+                <li class="project__tag">WEB3</li>
+                <li class="project__tag">WEBSITE DESIGN</li>
+              </ul>
+            </div>
+          </article>
+
+          <article data-reveal class="project">
+            <div class="project__media">
+              <img class="project__image" src="assets/project-sporting-lagos.webp" alt="Sporting Lagos app design" width="1169" height="743">
+            </div>
+            <div class="project__info">
+              <div class="project__heading">
+                <h3 class="project__name">Sporting Lagos</h3>
+                <span class="project__link project__link--pending">CASE STUDY COMING SOON</span>
+              </div>
+              <ul class="project__tags">
+                <li class="project__tag">2025-2026</li>
+                <li class="project__tag">SPORT</li>
+                <li class="project__tag">APP DESIGN</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="projects__row">
+          <article data-reveal class="project">
+            <div class="project__media">
+              <img class="project__image" src="assets/project-glint.webp" alt="Glint app design" width="1169" height="730">
+            </div>
+            <div class="project__info">
+              <div class="project__heading">
+                <h3 class="project__name">Glint</h3>
+                <a class="project__link" href="https://www.behance.net/gallery/231883305/Glint-Crypto-wallet-powered-by-chain-abstraction?platform=direct" target="_blank" rel="noopener noreferrer">SEE CASE STUDY<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+              </div>
+              <ul class="project__tags">
+                <li class="project__tag">2025</li>
+                <li class="project__tag">WEB3</li>
+                <li class="project__tag">APP DESIGN</li>
+              </ul>
+            </div>
+          </article>
+
+          <article data-reveal class="project">
+            <div class="project__media">
+              <img class="project__image" src="assets/project-mindmates.webp" alt="Mindmates website design" width="1169" height="893">
+            </div>
+            <div class="project__info">
+              <div class="project__heading">
+                <h3 class="project__name">Mindmates</h3>
+                <a class="project__link" href="https://www.behance.net/gallery/235780519/Mindmates-New-age-education-platform-landing-page?platform=direct" target="_blank" rel="noopener noreferrer">SEE CASE STUDY<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+              </div>
+              <ul class="project__tags">
+                <li class="project__tag">2025</li>
+                <li class="project__tag">EDUCATION TECH</li>
+                <li class="project__tag">WEBSITE DESIGN</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="stack" id="stack">
+      <h2 data-reveal class="stack__heading">My Creative Stack</h2>
+
+      <ul class="stack__list">
+        <li data-reveal class="stack__item">
+          <span class="stack__tile stack__tile--neutral">
+            <img class="stack__icon stack__icon--figma" src="assets/tool-figma.svg" alt="Figma logo" width="54" height="80">
+          </span>
+          <div class="stack__body">
+            <h3 class="stack__name">Figma</h3>
+            <p class="stack__desc">My primary tool for product design, systems, flows, and prototypes.</p>
+          </div>
+        </li>
+
+        <li data-reveal class="stack__item">
+          <span class="stack__tile stack__tile--neutral">
+            <img class="stack__icon stack__icon--framer" src="assets/tool-framer.svg" alt="Framer logo" width="53" height="80">
+          </span>
+          <div class="stack__body">
+            <h3 class="stack__name">Framer</h3>
+            <p class="stack__desc">For turning polished designs into responsive, interactive websites.</p>
+          </div>
+        </li>
+
+        <li data-reveal class="stack__item">
+          <span class="stack__tile stack__tile--jitter">
+            <img class="stack__icon stack__icon--jitter" src="assets/tool-jitter.svg" alt="Jitter logo" width="82" height="28">
+          </span>
+          <div class="stack__body">
+            <h3 class="stack__name">Jitter</h3>
+            <p class="stack__desc">My go-to for adding motion, transitions, and a little more life to static ideas.</p>
+          </div>
+        </li>
+
+        <li data-reveal class="stack__item">
+          <span class="stack__tile stack__tile--claude">
+            <img class="stack__icon stack__icon--claude" src="assets/tool-claude.svg" alt="Claude logo" width="80" height="80">
+          </span>
+          <div class="stack__body">
+            <h3 class="stack__name">Claude</h3>
+            <p class="stack__desc">For exploring ideas, solving problems, writing, and helping me move from design into code.</p>
+          </div>
+        </li>
+
+        <li data-reveal class="stack__item">
+          <span class="stack__tile stack__tile--neutral">
+            <img class="stack__icon stack__icon--notion" src="assets/tool-notion.svg" alt="Notion logo" width="76" height="80">
+          </span>
+          <div class="stack__body">
+            <h3 class="stack__name">Notion</h3>
+            <p class="stack__desc">For research, notes, documentation, planning, and everything in between.</p>
+          </div>
+        </li>
+
+        <li data-reveal class="stack__item">
+          <span class="stack__tile stack__tile--illustrator">
+            <img class="stack__icon stack__icon--illustrator" src="assets/tool-illustrator.svg" alt="Adobe Illustrator logo" width="83" height="80">
+          </span>
+          <div class="stack__body">
+            <h3 class="stack__name">Adobe Illustrator</h3>
+            <p class="stack__desc">For creating illustrations, custom graphics, icons, and visual assets when Figma isn&rsquo;t quite enough.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="quote">
+      <blockquote class="quote__text">
+        <p data-reveal>Good design doesn&rsquo;t make people think about the design.</p>
+        <p data-reveal>It helps them understand what to do next.</p>
+      </blockquote>
+    </section>
+
+    <section class="notes">
+      <div class="notes__pin">
+      <div class="notes__canvas">
+
+        <div class="notes__item notes__item--about">
+          <article class="note note--blue">
+            <img class="note__tear" src="assets/note-tear.svg" alt="" aria-hidden="true">
+            <img class="note__fold note__fold--back" src="assets/note-fold-a.svg" alt="" aria-hidden="true">
+            <img class="note__fold note__fold--front" src="assets/note-fold-b.svg" alt="" aria-hidden="true">
+            <p class="note__body">I&rsquo;m a product designer interested in the point where interface, language and technology meet. I care about how something works, but just as much about how clearly it explains itself.</p>
+          </article>
+        </div>
+
+        <div class="notes__item notes__item--motto">
+          <article class="note note--orange">
+            <div class="note__spiral" aria-hidden="true">
+              <img class="note__ring" src="assets/note-ring.svg" alt="">
+              <img class="note__ring" src="assets/note-ring.svg" alt="">
+              <img class="note__ring" src="assets/note-ring.svg" alt="">
+              <img class="note__ring" src="assets/note-ring.svg" alt="">
+              <img class="note__ring" src="assets/note-ring.svg" alt="">
+              <img class="note__ring" src="assets/note-ring.svg" alt="">
+              <img class="note__ring" src="assets/note-ring.svg" alt="">
+            </div>
+            <div class="note__lines">
+              <p class="note__line">I like making complicated</p>
+              <p class="note__line">things feel obvious.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="notes__item notes__item--tags">
+          <article class="note note--cream">
+            <ul class="note__tags">
+              <li class="note__tag"><span class="note__bullet" aria-hidden="true"></span>DESIGN</li>
+              <li class="note__tag"><span class="note__bullet" aria-hidden="true"></span>WRITE</li>
+              <li class="note__tag"><span class="note__bullet" aria-hidden="true"></span>PROTOTYPE</li>
+              <li class="note__tag"><span class="note__bullet" aria-hidden="true"></span>BUILD</li>
+            </ul>
+          </article>
+        </div>
+
+      </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="closing__inner">
+        <h2 data-reveal class="closing__title">Let&rsquo;s make something people love.</h2>
+
+        <a class="cta" href="#book" data-reveal>
+          <span class="cta__inner">
+            <span class="cta__dot" aria-hidden="true"></span>
+            <span class="cta__label">BOOK A CALL</span>
+          </span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div data-reveal class="footer__credit">
+      <img class="footer__mark footer__mark--lg" src="assets/icon-copyright.svg" alt="" width="24" height="24">
+      <img class="footer__mark footer__mark--sm" src="assets/icon-copyright-18.svg" alt="" width="18" height="18">
+      <p class="footer__text">2026 A.Collins</p>
+    </div>
+
+    <div data-reveal class="footer__social">
+      <a href="#" aria-label="LinkedIn">
+        <img class="footer__icon" src="assets/icon-linkedin-24.svg" alt="LinkedIn" width="24" height="24">
+      </a>
+      <a href="#" aria-label="X">
+        <img class="footer__icon" src="assets/icon-x-24.svg" alt="X" width="24" height="24">
+      </a>
+      <a href="#" aria-label="Behance">
+        <img class="footer__icon" src="assets/icon-behance-24.svg" alt="Behance" width="24" height="24">
+      </a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var toggle = document.querySelector('.navbar__toggle');
+  var menu = document.getElementById('primary-menu');
+
+  toggle.addEventListener('click', function () {
+    var isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    menu.classList.toggle('is-open', !isOpen);
+  });
+
+  menu.addEventListener('click', function (event) {
+    if (event.target.closest('a')) {
+      toggle.setAttribute('aria-expanded', 'false');
+      menu.classList.remove('is-open');
+    }
+  });
+
+  /* The notes collage is authored at its 1440px Figma size and scaled to fit,
+     so the rotated cards keep their exact relative positions at any width. */
+  var notes = document.querySelector('.notes');
+
+  function fitCollage() {
+    /* Desktop and phone author the collage on different frames, so the fit is
+       measured against whichever one the stylesheet currently declares. */
+    var frame = parseFloat(getComputedStyle(notes).getPropertyValue('--notes-w')) || 1440;
+    notes.style.setProperty('--collage-scale', Math.min(1, notes.clientWidth / frame));
+  }
+
+  fitCollage();
+  window.addEventListener('resize', fitCollage);
+
+  /* ---------------------------------------------------------
+     Hero reel: a continuous right-to-left track.
+
+     Position is driven by rAF rather than a CSS animation so the
+     track can pause at its exact offset and survive a resize
+     without restarting the loop.
+     --------------------------------------------------------- */
+  var reel = document.querySelector('.reel');
+  if (!reel) return;
+
+  var track = reel.querySelector('.reel__track');
+  var reelToggle = reel.querySelector('.reel__toggle');
+  var baseItems = Array.prototype.slice.call(track.children);
+  var baseCount = baseItems.length;
+
+  var SPEED = 25;          // css px per second
+  var offset = 0;          // distance travelled within one set
+  var setWidth = 0;        // exact repeat distance, gap included
+  var lastTime = 0;
+  var hoverHeld = false;
+  var userHeld = false;
+
+  var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function clearClones() {
+    var clones = track.querySelectorAll('[data-reel-clone]');
+    for (var i = 0; i < clones.length; i++) track.removeChild(clones[i]);
+  }
+
+  function addSet() {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < baseCount; i++) {
+      var copy = baseItems[i].cloneNode(true);
+      copy.setAttribute('data-reel-clone', '');
+      copy.setAttribute('aria-hidden', 'true');
+      var imgs = copy.querySelectorAll('img');
+      for (var j = 0; j < imgs.length; j++) imgs[j].setAttribute('alt', '');
+      fragment.appendChild(copy);
+    }
+    track.appendChild(fragment);
+  }
+
+  /* Rebuild the copies and re-measure. Progress through the set is kept
+     as a ratio so a breakpoint change does not visibly jump the track. */
+  function layout() {
+    var progress = setWidth ? offset / setWidth : 0;
+
+    clearClones();
+    addSet();
+    // offsetLeft is layout-based, so the item transforms do not skew it.
+    setWidth = track.children[baseCount].offsetLeft - track.children[0].offsetLeft;
+
+    var sets = Math.ceil(reel.clientWidth / setWidth) + 2;
+    for (var s = 2; s < sets; s++) addSet();
+
+    /* Descending depth: earlier (lower-left) cards paint over later
+       (upper-right) ones, reversing the default DOM paint order. Applied
+       across every sequence, so the ordering holds through the wrap. */
+    var all = track.children;
+    for (var i = 0; i < all.length; i++) {
+      all[i].style.zIndex = String(all.length - i);
+    }
+
+    offset = progress * setWidth;
+    render();
+  }
+
+  function render() {
+    // Held one set to the left so items exist beyond the left edge too.
+    track.style.transform = 'translate3d(' + (-(setWidth + offset)) + 'px, 0, 0)';
+  }
+
+  function frame(now) {
+    if (!lastTime) lastTime = now;
+    /* Clamped so returning to a backgrounded tab resumes where it left off
+       instead of jumping forward by the whole time it was hidden. */
+    var delta = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    if (!hoverHeld && !userHeld && setWidth) {
+      offset = (offset + SPEED * delta) % setWidth;
+      render();
+    }
+    rafId = window.requestAnimationFrame(frame);
+  }
+
+  var rafId = null;
+
+  function start() {
+    if (rafId || reducedMotion.matches) return;
+    lastTime = 0;
+    rafId = window.requestAnimationFrame(frame);
+  }
+
+  function stop() {
+    if (!rafId) return;
+    window.cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+
+  /* Hover holds the track. Listening on the track (not the hero) means
+     unrelated hero content never pauses it, and moving between adjacent
+     items never releases it, so the loop is never restarted. */
+  track.addEventListener('pointerover', function (event) {
+    if (event.pointerType === 'touch' || !finePointer.matches) return;
+    if (event.target.closest('.reel__item')) hoverHeld = true;
+  });
+
+  track.addEventListener('pointerout', function (event) {
+    if (event.pointerType === 'touch' || !finePointer.matches) return;
+    var next = event.relatedTarget;
+    if (!next || !next.closest || !next.closest('.reel__item')) hoverHeld = false;
+  });
+
+  reelToggle.addEventListener('click', function () {
+    userHeld = !userHeld;
+    reelToggle.setAttribute('aria-pressed', String(userHeld));
+    reelToggle.textContent = userHeld ? 'PLAY' : 'PAUSE';
+    reelToggle.setAttribute('aria-label', userHeld ? 'Resume the moving artwork' : 'Pause the moving artwork');
+  });
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(layout, 150);
+  });
+
+  reducedMotion.addEventListener('change', function () {
+    if (reducedMotion.matches) stop();
+    else start();
+  });
+
+  /* ---------------------------------------------------------
+     Notes: a scroll-linked entrance while the section is pinned.
+     Blue arrives from the left, then yellow from the right, then the
+     small card from below. Each lands on its authored position and
+     rotation, which live on the inner .note and are never touched here.
+     --------------------------------------------------------- */
+  (function () {
+    var section = document.querySelector('.notes');
+    if (!section) return;
+
+    var about = section.querySelector('.notes__item--about');
+    var motto = section.querySelector('.notes__item--motto');
+    var tags = section.querySelector('.notes__item--tags');
+    if (!about || !motto || !tags) return;
+
+    var cards = [about, motto, tags];
+    var canRun = document.documentElement.classList.contains('js-motion');
+    var pinned = false;
+    var queued = false;
+
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function leg(p, from, to) {
+      return easeOut(Math.max(0, Math.min(1, (p - from) / (to - from))));
+    }
+
+    function paint(p) {
+      var a = leg(p, 0.00, 0.34);
+      var b = leg(p, 0.30, 0.66);
+      var c = leg(p, 0.62, 0.96);
+      about.style.transform = 'translateX(' + (a - 1) * 170 + '%)';
+      motto.style.transform = 'translateX(' + (1 - b) * 170 + '%)';
+      tags.style.transform = 'translateY(' + (1 - c) * 300 + '%)';
+      about.style.opacity = Math.min(1, a * 1.8);
+      motto.style.opacity = Math.min(1, b * 1.8);
+      tags.style.opacity = Math.min(1, c * 1.8);
+    }
+
+    function clear() {
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].style.transform = '';
+        cards[i].style.opacity = '';
+      }
+    }
+
+    function update() {
+      if (!pinned) return;
+      var travel = section.offsetHeight - window.innerHeight;
+      if (travel <= 0) { paint(1); return; }
+      paint(Math.max(0, Math.min(1, -section.getBoundingClientRect().top / travel)));
+    }
+
+    function onScroll() {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(function () { queued = false; update(); });
+    }
+
+    function setMode() {
+      var want = canRun;
+      if (want === pinned) { update(); return; }
+      pinned = want;
+
+      if (pinned) {
+        section.classList.add('notes--pinned');
+        for (var i = 0; i < cards.length; i++) cards[i].removeAttribute('data-reveal');
+        update();
+      } else {
+        section.classList.remove('notes--pinned');
+        clear();
+      }
+    }
+
+    if (!canRun) {
+      for (var i = 0; i < cards.length; i++) cards[i].setAttribute('data-reveal', '');
+    }
+
+    setMode();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', function () { setMode(); onScroll(); });
+  })();
+
+  /* ---------------------------------------------------------
+     Scroll reveals. Siblings in the same group are staggered
+     slightly so a row settles in sequence rather than as a block.
+     --------------------------------------------------------- */
+  (function () {
+    var revealed = document.querySelectorAll('[data-reveal]');
+    if (!revealed.length) return;
+
+    var armed = document.documentElement.classList.contains('js-motion');
+    function show(el) { el.classList.add('is-revealed'); }
+
+    if (!armed || !('IntersectionObserver' in window)) {
+      for (var n = 0; n < revealed.length; n++) show(revealed[n]);
+      return;
+    }
+
+    var groups = new Map();
+    for (var i = 0; i < revealed.length; i++) {
+      var parent = revealed[i].parentElement;
+      var seen = groups.get(parent) || 0;
+      revealed[i].style.setProperty('--reveal-delay', Math.min(seen * 70, 280) + 'ms');
+      groups.set(parent, seen + 1);
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        show(entry.target);
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+
+    for (var k = 0; k < revealed.length; k++) io.observe(revealed[k]);
+
+    /* Short elements sitting inside that bottom inset — the footer's rows —
+       can never satisfy the observer once the page has run out of scroll,
+       so anything still hidden at the end of the document is released here. */
+    function sweepAtBottom() {
+      if (window.innerHeight + window.scrollY < document.body.scrollHeight - 4) return;
+      for (var j = 0; j < revealed.length; j++) show(revealed[j]);
+      window.removeEventListener('scroll', sweepAtBottom);
+    }
+    window.addEventListener('scroll', sweepAtBottom, { passive: true });
+    sweepAtBottom();
+  })();
+
+  /* Measure only once the artwork has settled. */
+  var images = track.querySelectorAll('img');
+  var pending = images.length;
+  function ready() {
+    if (--pending > 0) return;
+    layout();
+    start();
+  }
+  if (!pending) { layout(); start(); }
+  for (var i = 0; i < images.length; i++) {
+    if (images[i].complete) ready();
+    else {
+      images[i].addEventListener('load', ready);
+      images[i].addEventListener('error', ready);
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
