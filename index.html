@@ -2285,16 +2285,18 @@ a { color: inherit; text-decoration: none; }
 })();
 
 /* ---------------------------------------------------------
-   Book a call — opens Calendly in its own modal.
+   Book a call — opens Cal.com in its own modal.
 
-   Paste your scheduling link between the quotes below; leave it empty
-   and the buttons stay inert rather than pointing somewhere broken.
-   e.g. 'https://calendly.com/collins-abudu/30min'
+   Change the booking link here and the three buttons follow.
+   Leave it empty and they stay inert rather than pointing somewhere broken.
    --------------------------------------------------------- */
-var CALENDLY_URL = 'https://calendly.com/collinsabuduac/30min';
+var CAL_URL = 'https://cal.com/collins-z93tg2/30min';
 
 (function () {
-  if (!CALENDLY_URL) return;
+  if (!CAL_URL) return;
+
+  var origin = CAL_URL.match(/^https?:\/\/[^/]+/)[0];
+  var calLink = CAL_URL.slice(origin.length).replace(/^\/+|\/+$/g, '');
 
   var triggers = document.querySelectorAll('a[href="#book"]');
   if (!triggers.length) return;
@@ -2302,37 +2304,62 @@ var CALENDLY_URL = 'https://calendly.com/collinsabuduac/30min';
   /* Real hrefs, so the buttons still work with JS off, and so
      cmd-click / middle-click open the booking page in a new tab. */
   for (var i = 0; i < triggers.length; i++) {
-    triggers[i].setAttribute('href', CALENDLY_URL);
+    triggers[i].setAttribute('href', CAL_URL);
     triggers[i].setAttribute('rel', 'noopener noreferrer');
   }
 
-  var loading = false;
+  /* Cal.com's official loader. It only queues calls and injects embed.js on
+     the first Cal(...) invocation, so nothing is fetched — and no third-party
+     cookies are set — until someone actually asks to book. */
+  (function (C, A, L) {
+    var p = function (a, ar) { a.q.push(ar); };
+    var d = C.document;
+    C.Cal = C.Cal || function () {
+      var cal = C.Cal;
+      var ar = arguments;
+      if (!cal.loaded) {
+        cal.ns = {};
+        cal.q = cal.q || [];
+        d.head.appendChild(d.createElement('script')).src = A;
+        cal.loaded = true;
+      }
+      if (ar[0] === L) {
+        var api = function () { p(api, arguments); };
+        var namespace = ar[1];
+        api.q = api.q || [];
+        if (typeof namespace === 'string') {
+          cal.ns[namespace] = cal.ns[namespace] || api;
+          p(cal.ns[namespace], ar);
+          p(cal, ['initNamespace', namespace]);
+        } else {
+          p(cal, ar);
+        }
+        return;
+      }
+      p(cal, ar);
+    };
+  })(window, 'https://app.cal.com/embed/embed.js', 'init');
 
-  /* Calendly's script is only fetched once someone actually asks to book,
-     so it costs nothing — and sets no third-party cookies — for everyone else. */
-  function load(then) {
-    if (window.Calendly) { then(); return; }
-    if (loading) return;
-    loading = true;
-
-    var css = document.createElement('link');
-    css.rel = 'stylesheet';
-    css.href = 'https://assets.calendly.com/assets/external/widget.css';
-    document.head.appendChild(css);
-
-    var js = document.createElement('script');
-    js.src = 'https://assets.calendly.com/assets/external/widget.js';
-    js.async = true;
-    js.onload = function () { loading = false; then(); };
-    js.onerror = function () { loading = false; window.open(CALENDLY_URL, '_blank', 'noopener'); };
-    document.head.appendChild(js);
-  }
+  var started = false;
 
   function onClick(event) {
     /* Leave modified clicks alone so they open a tab as the user intended. */
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
     event.preventDefault();
-    load(function () { window.Calendly.initPopupWidget({ url: CALENDLY_URL }); });
+
+    if (!started) {
+      started = true;
+      window.Cal('init', { origin: origin });
+    }
+
+    /* Cal builds a fresh <cal-modal-box> per call and leaves the old one in
+       the DOM after it is dismissed, so repeat clicks would stack modals and
+       load an iframe each. Clearing first keeps exactly one, and makes
+       reopening after a close work. */
+    var open = document.querySelectorAll('cal-modal-box');
+    for (var n = 0; n < open.length; n++) open[n].remove();
+
+    window.Cal('modal', { calLink: calLink, calOrigin: origin });
   }
 
   for (var k = 0; k < triggers.length; k++) {
