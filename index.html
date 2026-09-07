@@ -21,6 +21,7 @@
   --color-muted:           #958e7c;
   --color-accent:          #fd540b;
   --color-accent-border:   #e44a03;
+  --color-accent-muted:    #b3aca9;
   --color-accent-shade:    #cf4100;
   --color-accent-tint:     #ffb898;
   --color-dot-muted:       #d9d9d9;
@@ -335,6 +336,23 @@ a { color: inherit; text-decoration: none; }
   border-radius: var(--radius-pill-inner);
   background-color: var(--color-accent);
   box-shadow: var(--shadow-cta);
+}
+
+/* Figma pairs the two buttons on one row, 20px apart. */
+.cta-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Secondary: flat taupe pill — no accent ring, no dot, no inset highlight. */
+.cta--secondary { box-shadow: none; }
+
+.cta--secondary .cta__inner {
+  background-color: var(--color-accent-muted);
+  box-shadow: none;
 }
 
 .cta__dot {
@@ -1536,6 +1554,9 @@ a { color: inherit; text-decoration: none; }
       </nav>
 
       <div class="navbar__social">
+        <a href="mailto:collinsabuduac@gmail.com" aria-label="Email Collins">
+          <img class="navbar__social-icon" src="assets/icon-email.svg" alt="Email" width="20" height="20">
+        </a>
         <a href="https://www.linkedin.com/in/collins-abudu-300a701b8" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
           <img class="navbar__social-icon" src="assets/icon-linkedin.svg" alt="LinkedIn" width="20" height="20">
         </a>
@@ -1566,12 +1587,19 @@ a { color: inherit; text-decoration: none; }
           <h1 class="hero__title">I design. I write.<br>Sometimes build.</h1>
         </div>
 
-        <a class="cta" href="#book">
-          <span class="cta__inner">
-            <span class="cta__dot" aria-hidden="true"></span>
-            <span class="cta__label">BOOK A CALL</span>
-          </span>
-        </a>
+        <div class="cta-group">
+          <a class="cta" href="#book">
+            <span class="cta__inner">
+              <span class="cta__dot" aria-hidden="true"></span>
+              <span class="cta__label">BOOK A CALL</span>
+            </span>
+          </a>
+          <a class="cta cta--secondary" href="mailto:collinsabuduac@gmail.com">
+            <span class="cta__inner">
+              <span class="cta__label">SEND AN EMAIL</span>
+            </span>
+          </a>
+        </div>
       </div>
 
       <div class="reel" role="region" aria-label="Selected interface work">
@@ -1956,12 +1984,19 @@ a { color: inherit; text-decoration: none; }
       <div class="closing__inner">
         <h2 data-reveal class="closing__title">Let&rsquo;s make something people love.</h2>
 
-        <a class="cta" href="#book" data-reveal>
-          <span class="cta__inner">
-            <span class="cta__dot" aria-hidden="true"></span>
-            <span class="cta__label">BOOK A CALL</span>
-          </span>
-        </a>
+        <div class="cta-group" data-reveal>
+          <a class="cta" href="#book">
+            <span class="cta__inner">
+              <span class="cta__dot" aria-hidden="true"></span>
+              <span class="cta__label">BOOK A CALL</span>
+            </span>
+          </a>
+          <a class="cta cta--secondary" href="mailto:collinsabuduac@gmail.com">
+            <span class="cta__inner">
+              <span class="cta__label">SEND AN EMAIL</span>
+            </span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
