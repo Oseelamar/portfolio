@@ -2084,6 +2084,46 @@ a { color: inherit; text-decoration: none; }
   var hoverHeld = false;
   var userHeld = false;
 
+  /* One opening flush per page load: the track starts fast and eases onto
+     SPEED. It is only ever a speed, so position stays continuous — no reset,
+     jump or second animation — and the cards move as the one unit they
+     already are. The flags live for the page's lifetime, so remounting,
+     resizing, hovering or scrolling back never replays it. */
+  var BURST_SPEED = 1800;  // px per second at the very start
+  var BURST_MS = 2000;     // time taken to settle onto SPEED
+  var burstFrom = null;
+  var burstOver = false;
+  var burstWaitUntil = null;
+
+  function artworkReady() {
+    var imgs = track.querySelectorAll('.reel__item:not([data-reel-clone]) img');
+    for (var i = 0; i < imgs.length; i++) {
+      if (!imgs[i].complete) return false;
+    }
+    return true;
+  }
+
+  function speedAt(now) {
+    if (burstOver) return SPEED;
+
+    if (burstFrom === null) {
+      /* Hold at the normal speed until the artwork has painted, so the flush
+         never sweeps blank cards past. Capped so a slow image cannot cancel
+         the opening entirely. */
+      if (burstWaitUntil === null) burstWaitUntil = now + 2500;
+      if (!setWidth || (!artworkReady() && now < burstWaitUntil)) return SPEED;
+      burstFrom = now;
+    }
+
+    var t = (now - burstFrom) / BURST_MS;
+    if (t >= 1) { burstOver = true; return SPEED; }
+
+    /* Cubic ease-out: fast, then decelerating onto SPEED with a matching
+       slope, so the hand-off to normal motion is not perceptible. */
+    var k = 1 - t;
+    return SPEED + (BURST_SPEED - SPEED) * k * k * k;
+  }
+
   var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -2143,7 +2183,7 @@ a { color: inherit; text-decoration: none; }
     lastTime = now;
 
     if (!hoverHeld && !userHeld && setWidth) {
-      offset = (offset + SPEED * delta) % setWidth;
+      offset = (offset + speedAt(now) * delta) % setWidth;
       render();
     }
     rafId = window.requestAnimationFrame(frame);
