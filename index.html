@@ -2463,6 +2463,60 @@ var CAL_URL = 'https://cal.com/collins-z93tg2/30min';
     triggers[k].addEventListener('touchstart', warm, { passive: true });
   }
 })();
+
+/* ---------------------------------------------------------
+   Analytics beacon.
+
+   Fire-and-forget: sendBeacon hands the payload to the browser, which
+   delivers it on its own time, so nothing here blocks a click or delays
+   the page. No cookies and no identifiers are set on this end — the
+   collector derives a daily-rotating hash and stores no IP.
+   --------------------------------------------------------- */
+(function () {
+  var ENDPOINT = 'https://portfolio-analytics.collinsabuduac.workers.dev/collect';
+  if (!navigator.sendBeacon) return;
+
+  var device = window.matchMedia('(max-width: 768px)').matches ? 'mobile' : 'desktop';
+
+  function send(payload) {
+    payload.path = location.pathname;
+    payload.device = device;
+    try {
+      /* text/plain keeps this a "simple" request, so the browser skips the
+         CORS preflight and it costs one round trip rather than two. */
+      navigator.sendBeacon(ENDPOINT, new Blob([JSON.stringify(payload)], { type: 'text/plain' }));
+    } catch (err) { /* analytics must never break the page */ }
+  }
+
+  send({ type: 'pageview', referrer: document.referrer || null });
+
+  var ICON = { LinkedIn: 'linkedin', X: 'x', Behance: 'behance', 'Email Collins': 'email-icon' };
+
+  function label(a) {
+    var href = a.getAttribute('href') || '';
+    if (a.classList.contains('cta--secondary')) return 'send-an-email';
+    if (a.classList.contains('cta') || href.indexOf('cal.com') > -1 || href === '#book') {
+      return 'book-a-call';
+    }
+    if (a.classList.contains('project__link')) {
+      var card = a.closest('.project');
+      var name = card && card.querySelector('.project__name');
+      return 'project:' + (name ? name.textContent.trim().toLowerCase().replace(/\s+/g, '-') : '?');
+    }
+    return ICON[a.getAttribute('aria-label')] || null;
+  }
+
+  document.addEventListener(
+    'click',
+    function (event) {
+      var a = event.target.closest && event.target.closest('a');
+      if (!a) return;
+      var name = label(a);
+      if (name) send({ type: 'click', name: name });
+    },
+    true
+  );
+})();
 </script>
 
 </body>
