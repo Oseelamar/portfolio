@@ -1,0 +1,1396 @@
+/* ============================================================
+   Case-study pages — collinsabudu.com
+
+   Generated: the page chrome (tokens, navbar, footer, reveals) mirrors
+   index.html, and the case-study layout is ported from the studio site and
+   rethemed onto this site's light palette and three typefaces.
+   ============================================================ */
+/* ============================================================
+   Design tokens
+   ============================================================ */
+:root {
+  /* Colors */
+  --color-page:            #fef5f3;
+  --color-ink:             #171715;
+  --color-muted:           #958e7c;
+  --color-accent:          #fd540b;
+  --color-accent-border:   #e44a03;
+  --color-accent-muted:    #b3aca9;
+  --color-accent-shade:    #cf4100;
+  --color-accent-tint:     #ffb898;
+  --color-dot-muted:       #d9d9d9;
+  --color-dot-light:       #fffef8;
+  --color-on-accent:       #ffffff;
+  --color-nav-surface:     rgba(221, 214, 214, 0.5);
+  --color-body:            #4c4c4a;
+  --color-surface:         #ffffff;
+  --color-tile-neutral:    #e3e3e3;
+  --color-tile-jitter:     #7a40ed;
+  --color-tile-claude:     #d77655;
+  --color-tile-illustrator:#330000;
+  --color-note-blue:       #acd1ec;
+  --color-note-orange:     #faa823;
+  --color-note-cream:      #f8ebd8;
+  --color-note-ink:        #062134;
+  --color-tag:             #4c4c48;
+  --color-rule:            rgba(255, 255, 255, 0.3);
+  --color-link:            #ff570e;
+  --color-pending:         #b9b9b9;
+  --color-tag-surface:     #ededed;
+  --color-tag-text:        #6d6a60;
+  --gradient-statement:    linear-gradient(180deg, #fff7f5 0%, #ffffff 74.052%, #ffffff 100%);
+
+  /* Typography */
+  --font-display:  "Nanum Myeongjo", "Times New Roman", serif;
+  --font-mono:     "Fragment Mono", "Courier New", monospace;
+  --font-editorial: "PP Editorial New", "Nanum Myeongjo", "Times New Roman", serif;
+  --font-sans:     "Geist", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-sans-mono: "Geist Mono", "Courier New", monospace;
+
+  --fs-display:   120px;
+  --fs-brand:     24px;
+  --fs-lead:      24px;
+  --fs-section:   88px;
+  --fs-quote:     72px;
+  --fs-item:      36px;
+  --fs-body:      16px;
+  --fs-nav:       14px;
+
+  --lh-display:   124px;
+  --lh-lead:      1.64;
+  --lh-section:   96px;
+  --lh-quote:     96px;
+  --lh-item:      56px;
+  --ls-display:   -4.8px;
+  --ls-brand:     -0.48px;
+  --ls-lead:      -0.6px;
+  --ls-section:   -4.4px;
+  --ls-quote:     -3.6px;
+  --ls-item:      -2.16px;
+  --ls-desc:      -0.4px;
+
+  /* Spacing */
+  --space-1:   6px;
+  --space-2:   8px;
+  --space-3:   16px;
+  --space-4:   20px;
+  --space-5:   24px;
+  --space-6:   28px;
+  --space-7:   32px;
+  --space-8:   72px;
+  --space-9:   140px;
+
+  /* Radii */
+  --radius-nav:        21px;
+  --radius-pill:       44px;
+  --radius-pill-inner: 41px;
+
+  /* Shadows */
+  --shadow-cta: inset 0 -2px 4px 0 var(--color-accent-shade),
+                inset 0 2px 4px 0 var(--color-accent-tint);
+
+  /* Layout */
+  --frame-width: 1440px;
+  --nav-pad-x: var(--space-5);
+}
+/* ============================================================
+   Base
+   ============================================================ */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+/* ============================================================
+   Block: page
+   ============================================================ */
+.page {
+  position: relative;
+  width: 100%;
+  max-width: var(--frame-width);
+  margin: 0 auto;
+  /* clip, not hidden: `hidden` would make this a scroll container and break
+     position:sticky for the pinned notes sequence inside it. */
+  overflow-x: clip;
+}
+/* ============================================================
+   Block: navbar
+   ============================================================ */
+.navbar {
+  position: fixed;
+  top: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-8);
+  width: calc(100% - 48px);
+  max-width: 693px;
+  min-height: 64px;
+  padding: var(--space-4) var(--nav-pad-x);
+  border-radius: var(--radius-nav);
+  background-color: var(--color-nav-surface);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+/* The wrapper only groups the links and socials for the mobile panel —
+   on desktop its children sit directly on the navbar's flex row. */
+.navbar__menu { display: contents; }
+.navbar__brand {
+  position: absolute;
+  top: 50%;
+  left: var(--nav-pad-x);
+  transform: translateY(-50%);
+  font-family: var(--font-editorial);
+  font-weight: 200;
+  font-size: var(--fs-brand);
+  line-height: 1;
+  letter-spacing: var(--ls-brand);
+  color: var(--color-ink);
+  text-align: center;
+}
+.navbar__toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+}
+.navbar__toggle-bar {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  margin: 0 auto;
+  background-color: var(--color-ink);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.navbar__toggle-bar + .navbar__toggle-bar { margin-top: 5px; }
+.navbar__toggle[aria-expanded="true"] .navbar__toggle-bar:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.navbar__toggle[aria-expanded="true"] .navbar__toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+.navbar__toggle[aria-expanded="true"] .navbar__toggle-bar:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+.navbar__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-7);
+}
+.navbar__link {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--fs-nav);
+  line-height: normal;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+.navbar__social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+.navbar__social-icon {
+  width: 20px;
+  height: 20px;
+}
+/* ============================================================
+   Block: cta
+   ============================================================ */
+/* Figma draws the stroke inside the frame bounds, so an inset ring is used
+   instead of a border, which would add 2px to the button's width and height. */
+.cta {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1px;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--color-accent-border);
+}
+.cta__inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-7);
+  border-radius: var(--radius-pill-inner);
+  background-color: var(--color-accent);
+  box-shadow: var(--shadow-cta);
+}
+/* Figma pairs the two buttons on one row, 20px apart. */
+.cta-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+/* Secondary: flat taupe pill — no accent ring, no dot, no inset highlight. */
+.cta--secondary { box-shadow: none; }
+.cta--secondary .cta__inner {
+  background-color: var(--color-accent-muted);
+  box-shadow: none;
+}
+.cta__dot {
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--color-dot-light);
+}
+.cta__label {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--fs-body);
+  line-height: normal;
+  color: var(--color-on-accent);
+  white-space: nowrap;
+}
+/* ============================================================
+   Block: footer
+   ============================================================ */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 120px;
+  background-color: var(--color-surface);
+}
+.footer__credit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.footer__mark {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+/* Figma ships the mark at two sizes with the same 1.5px stroke, so the
+   smaller one is its own file rather than the large one scaled down. */
+.footer__mark--sm { display: none; }
+.footer__text {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: normal;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+.footer__social {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.footer__icon {
+  width: 24px;
+  height: 24px;
+}
+/* ============================================================
+   Motion
+
+   Reveals are armed by the `js-motion` class, which is only set when
+   scripting is available and reduced motion is not requested — so the page
+   is fully visible and static in either of those cases.
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+.js-motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 640ms cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms),
+    transform 640ms cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms);
+}
+.js-motion [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+/* Hover polish — all restrained, all reversible. */
+.navbar__link,
+.project__link { transition: color 200ms ease; }
+.navbar__link:hover { color: var(--color-ink); }
+.navbar__social a,
+.footer__social a { transition: opacity 200ms ease; }
+.navbar__social a:hover,
+.footer__social a:hover { opacity: 0.6; }
+.cta__inner { transition: transform 250ms ease, filter 250ms ease; }
+.cta:hover .cta__inner {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+@media (prefers-reduced-motion: reduce) {
+  .navbar__link,
+  .project__link,
+  .navbar__social a,
+  .footer__social a,
+  .cta__inner,
+  .project__arrow,
+  .project__image,
+  .stack__tile { transition: none; }
+
+  .cta:hover .cta__inner,
+  .project:hover .project__image,
+  .project__link:hover .project__arrow,
+  .stack__item:hover .stack__tile { transform: none; }
+}
+@media (max-width: 1024px) {
+  :root {
+    --fs-display: 76px;
+    --lh-display: 80px;
+    --ls-display: -3.04px;
+    --space-9: 148px;
+  }
+  .navbar {
+    flex-wrap: wrap;
+    column-gap: var(--space-4);
+    row-gap: 0;
+    max-width: 693px;
+  }
+  /* Opened, the panel sits over the hero artwork, so it leans harder on the
+     blur and a more opaque ground to stay legible against it. */
+  .navbar.is-expanded {
+    background-color: rgba(236, 232, 228, 0.82);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+  }
+  .navbar__brand {
+    top: var(--space-4);
+    transform: none;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    text-align: left;
+  }
+  .navbar__toggle {
+    display: block;
+    order: 2;
+  }
+  .navbar__menu {
+    order: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: max-height 0.35s ease, opacity 0.25s ease,
+                margin-top 0.35s ease, visibility 0s linear 0.35s;
+  }
+  .navbar__menu.is-open {
+    max-height: 320px;
+    margin-top: var(--space-4);
+    opacity: 1;
+    visibility: visible;
+    transition: max-height 0.35s ease, opacity 0.25s ease 0.05s,
+                margin-top 0.35s ease, visibility 0s linear 0s;
+  }
+  .navbar__nav {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .navbar__social {
+    justify-content: center;
+  }
+  .footer { padding: 32px 64px; }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --fs-display: 44px;
+    --lh-display: 46px;
+    --ls-display: -1.76px;
+    --fs-body: 12px;
+    --fs-brand: 20px;
+    --space-9: 148px;
+    --space-3: 10px;
+    --space-7: 24px;
+    --nav-pad-x: 20px;
+  }
+  .navbar {
+    width: calc(100% - 32px);
+  }
+  .cta__inner { padding: 14px var(--space-7); }
+  /* Phone footer stacks and centres, socials above the credit line. */
+  .footer {
+    flex-direction: column-reverse;
+    justify-content: center;
+    gap: 24px;
+    padding: 16px 24px 24px;
+  }
+  .footer__social { gap: 24px; }
+  .footer__icon {
+    width: 20px;
+    height: 20px;
+  }
+  .footer__credit { gap: 8px; }
+  .footer__mark--lg { display: none; }
+  .footer__mark--sm {
+    display: block;
+    width: 18px;
+    height: 18px;
+  }
+  .footer__text { font-size: 14px; }
+}
+
+/* ============================================================
+   Case-study page shell
+   ============================================================ */
+.case {
+  --gutter: 40px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --case-rule: rgba(23, 23, 21, 0.12);
+  --case-media-bg: #f2eae7;
+  display: block;
+  padding: 148px var(--gutter) 0;
+}
+
+.case-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 48px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: normal;
+  color: var(--color-link);
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+
+.case-back:hover { gap: 14px; }
+
+.case-back__arrow {
+  width: 20px;
+  height: 20px;
+  transform: rotate(180deg);
+}
+
+/* Tag pills, matching the project cards on the landing page */
+.tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 30px;
+  background-color: var(--color-tag-surface);
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--fs-nav);
+  line-height: normal;
+  color: var(--color-tag-text);
+  white-space: nowrap;
+}
+
+/* "Visit site" sits with the project facts, in the landing page's CTA shape */
+.case-visit {
+  align-self: flex-start;
+  margin-top: 48px;
+}
+
+/* Header: tags + title on the left, intro on the right */
+.case-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+}
+.case-header__main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 0 1 656px;
+}
+.case-header .tag {
+  border-radius: 20px;
+}
+.case-title {
+  margin: 0;
+  font-weight: 500;
+  font-size: 56px;
+  line-height: 1.3;
+  letter-spacing: -1.12px;
+}
+.case-intro,
+.case-chapter__body p {
+  margin: 0;
+  color: var(--color-body);
+  font-size: 18px;
+  line-height: 1.58;
+  letter-spacing: -0.18px;
+}
+.case-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 0 1 539px;
+  padding-top: 12px;
+}
+.case-intro p {
+  margin: 0;
+}
+/* Large standalone line that closes a chapter */
+.case-statement {
+  max-width: 900px;
+  margin: 120px 0 0;
+  font-size: 56px;
+  line-height: 1.25;
+  letter-spacing: -1.68px;
+}
+/* Right-column text that continues a chapter after a full-width block */
+.case-chapter.case-chapter--continued {
+  margin-top: 80px;
+}
+/* Press logos (Figma "Section 1"): TV row above, magazines below, centred */
+.case-press {
+  --logo-scale: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 82px;
+  margin-top: 120px;
+  padding: 80px 0;
+}
+.case-press__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 32px 48px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.case-press__row:first-child {
+  column-gap: 26px;
+}
+.case-press__row li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.case-press__row img {
+  width: calc(var(--logo-w) * var(--logo-scale));
+  height: calc(var(--logo-h) * var(--logo-scale));
+}
+/* Short list inside a chapter (e.g. "The Experience") */
+.case-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--case-rule);
+}
+.case-list li {
+  padding: 14px 0;
+  border-top: 1px solid var(--case-rule);
+  font-size: 18px;
+  line-height: 1.4;
+  letter-spacing: -0.18px;
+}
+/* Bullet-point version of the list: same text as the body, no dividing lines */
+.case-list.case-list--bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 1.25em;
+  border-bottom: 0;
+  list-style: disc;
+  color: var(--color-body);
+}
+.case-list.case-list--bullets li {
+  padding: 0 0 0 4px;
+  border-top: 0;
+  line-height: 1.58;
+}
+.case-list.case-list--bullets li::marker {
+  color: var(--color-accent);
+}
+/* Media placeholders: put an <img>/<video> inside .case-media */
+.case-figure {
+  margin: 0;
+}
+.case-media {
+  overflow: hidden;
+  aspect-ratio: 1360 / 720;
+  background: var(--case-media-bg);
+}
+.case-media > img,
+.case-media > video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.case-figure--hero {
+  margin-top: 72px;
+}
+.case-figure--full {
+  margin-top: 120px;
+}
+/* A full-width image straight after the colour palette sits close to it, as one block */
+.case-palette + .case-figure--full {
+  margin-top: 12px;
+}
+.case-caption {
+  margin-top: 16px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.14px;
+}
+.case-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 120px;
+}
+/* Edge-to-edge image: spans the full sheet width, ignoring the side margins
+   (at a 1440px window it shows at the Figma frame's exact 1440px width) */
+.case-figure--bleed {
+  margin-right: calc(var(--gutter) * -1);
+  margin-left: calc(var(--gutter) * -1);
+}
+/* Edge-to-edge pair: two images spanning the full sheet width */
+.case-pair--bleed {
+  gap: 16px;
+  margin-right: calc(var(--gutter) * -1);
+  margin-left: calc(var(--gutter) * -1);
+}
+/* Back-to-back edge-to-edge slides sit close together */
+.case-figure--bleed + .case-pair.case-pair--bleed,
+.case-figure--bleed + .case-figure--bleed {
+  margin-top: 16px;
+}
+/* Colour palette (Figma 19:864): 652 / 318 / 318 columns, 1320 x 400 at design size */
+.case-palette {
+  display: grid;
+  grid-template-columns: 652fr 318fr 318fr;
+  gap: 16px;
+  aspect-ratio: 1320 / 400;
+  margin-top: 120px;
+}
+.case-figure--full + .case-palette,
+.case-pair + .case-palette {
+  margin-top: 12px;
+}
+.case-palette__stack {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+}
+.swatch {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px;
+  overflow: hidden;
+  border-radius: 0;
+  font-family: var(--font-sans);
+}
+.swatch--bottom {
+  justify-content: flex-end;
+}
+.swatch__name,
+.swatch__hex {
+  margin: 0;
+  line-height: 22.4px;
+}
+.swatch__name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: -0.48px;
+}
+.swatch__hex {
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -0.36px;
+}
+/* Grid of landscape cards (e.g. Glint's stat cards, 652 x 400 each) */
+.case-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 120px;
+}
+.case-media.case-media--card {
+  aspect-ratio: 652 / 400;
+}
+/* A pair directly under a full-width image reads as one block */
+.case-figure--full + .case-pair {
+  margin-top: 12px;
+}
+.case-pair .case-media {
+  aspect-ratio: var(--pair-ratio, 674 / 720);
+}
+/* Product strip (Figma "Frame 296"): cards keep their Figma proportions and
+   scale with the frame's height (--u = 1 at the 720px design height). */
+.case-media.case-shop {
+  container-type: size;
+  display: flex;
+  align-items: center;
+  background: #fff;
+}
+.case-shop__track {
+  --u: calc(100cqh / 720);
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+  animation: shop-scroll 48s linear infinite;
+  animation-delay: -4s;
+}
+.case-shop:hover .case-shop__track {
+  animation-play-state: paused;
+}
+@keyframes shop-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.shop-card {
+  display: flex;
+  flex-direction: column;
+  width: calc(331 * var(--u));
+  margin-right: calc(12 * var(--u));
+  font-family: "Barlow", var(--font-sans);
+  font-weight: 500;
+}
+.shop-card__media {
+  position: relative;
+  min-height: calc(452 * var(--u));
+  overflow: hidden;
+  background: #faf5f2;
+}
+.shop-card__frame {
+  position: relative;
+  height: calc(406 * var(--u));
+  overflow: hidden;
+}
+.shop-card__box {
+  position: absolute;
+  top: calc(50% + 17 * var(--u));
+  left: 50%;
+  width: calc(356 * var(--u));
+  height: calc(340 * var(--u));
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+}
+.shop-card__box img {
+  position: absolute;
+  max-width: none;
+}
+.shop-card__cta {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: calc(16 * var(--u)) calc(14 * var(--u));
+  background: #0b0b0b;
+  color: #fff;
+  font-size: max(10px, calc(12 * var(--u)));
+  letter-spacing: calc(0.84 * var(--u));
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.shop-card:hover .shop-card__cta {
+  opacity: 1;
+  transform: none;
+}
+.shop-card__name,
+.shop-card__price {
+  margin: 0;
+}
+.shop-card__name {
+  margin-top: calc(20 * var(--u));
+  color: #727272;
+  font-size: max(10px, calc(12 * var(--u)));
+  line-height: 1.1;
+  letter-spacing: calc(0.96 * var(--u));
+  text-transform: uppercase;
+}
+.shop-card__price {
+  margin-top: calc(4 * var(--u));
+  color: #272727;
+  font-size: max(11px, calc(13 * var(--u)));
+  line-height: 1.6;
+  letter-spacing: calc(0.78 * var(--u));
+}
+@media (prefers-reduced-motion: reduce) {
+  .case-media.case-media--pan > img {
+    animation: none;
+  }
+
+  .case-media.case-shop {
+    overflow-x: auto;
+  }
+
+  .case-shop__track {
+    animation: none;
+  }
+}
+/* Small mono label used for chapter numbers, gallery, credits */
+.case-kicker {
+  margin: 0;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: normal;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+}
+/* Project facts */
+.case-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px 12px;
+  margin: 40px 0 0;
+}
+.case-meta__item {
+  padding-top: 16px;
+  border-top: 1px solid var(--case-rule);
+}
+.case-meta dt,
+.case-credits dt {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.14px;
+  text-transform: uppercase;
+}
+.case-meta dd,
+.case-credits dd {
+  margin: 8px 0 0;
+  font-size: 18px;
+  line-height: 1.4;
+}
+/* Chapters: number + heading left, copy right (same columns as the header) */
+.case-chapter {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 160px;
+}
+.case-chapter__head {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 0 1 656px;
+}
+.case-chapter__title {
+  margin: 0;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1.3;
+  letter-spacing: -0.8px;
+}
+.case-chapter__body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 0 1 539px;
+  padding-top: 40px;
+}
+/* Gallery carousel with counter */
+.case-carousel {
+  margin-top: 160px;
+}
+.case-carousel__bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.case-carousel__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+}
+.case-carousel__count {
+  margin-right: 12px;
+  color: var(--color-muted);
+}
+.case-carousel__btn {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-tag-surface);
+  color: var(--color-ink);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.case-carousel__btn:hover,
+.case-carousel__btn:focus-visible {
+  background: var(--color-dot-muted);
+}
+.case-carousel__track {
+  display: flex;
+  gap: 12px;
+  margin: 0 calc(var(--gutter) * -1);
+  padding: 0 var(--gutter);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 var(--gutter);
+  scrollbar-width: none;
+  list-style: none;
+}
+.case-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+.case-carousel__slide {
+  flex: 0 0 min(900px, 80%);
+  scroll-snap-align: start;
+}
+.case-carousel__slide .case-media {
+  aspect-ratio: 900 / 600;
+}
+/* Client quote */
+.case-quote {
+  max-width: 1100px;
+  margin: 160px 0 0;
+}
+.case-quote p {
+  margin: 0;
+  font-size: 56px;
+  line-height: 1.25;
+  letter-spacing: -1.68px;
+}
+.case-quote footer {
+  margin-top: 32px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 0.16px;
+  text-transform: uppercase;
+}
+/* Results */
+.case-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 64px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.case-stats li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--case-rule);
+}
+.case-stats strong {
+  font-weight: 400;
+  font-size: 80px;
+  line-height: 1;
+  letter-spacing: -3.2px;
+}
+.case-stats span {
+  color: var(--color-muted);
+  font-size: 18px;
+}
+/* Credits */
+.case-credits {
+  margin-top: 160px;
+}
+.case-credits__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px 12px;
+  margin: 24px 0 0;
+}
+/* Next project */
+.case-next {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 160px calc(var(--gutter) * -1) 0;
+  padding: 80px var(--gutter) 96px;
+  border-top: 1px solid var(--case-rule);
+}
+.case-next__title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(48px, 9vw, 128px);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  transition: color 0.2s ease;
+}
+.case-next__title img {
+  display: inline-block;
+  width: 0.35em;
+  height: auto;
+  margin-left: 0.12em;
+  vertical-align: 0.1em;
+  transition: transform 0.3s var(--ease-out);
+}
+.case-next:hover .case-next__title,
+.case-next:focus-visible .case-next__title {
+  color: var(--color-accent);
+}
+.case-next:hover .case-next__title img,
+.case-next:focus-visible .case-next__title img {
+  transform: translate(6px, -6px);
+}
+/* Title card (Nookly): a 1440 × 825 Figma frame that scales with the page.
+   --u is one Figma pixel at the current width. */
+.case-banner {
+  container-type: inline-size;
+}
+.case-banner__frame {
+  --u: calc(100cqw / 1440);
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1440 / 825;
+  background: #fefcf7;
+}
+.case-banner__title {
+  position: absolute;
+  top: calc(254 * var(--u));
+  left: 50%;
+  width: calc(895 * var(--u));
+  margin: 0;
+  color: #0f181c;
+  font-family: "Baloo 2", var(--font-sans);
+  font-weight: 600;
+  font-size: calc(96 * var(--u));
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  text-align: center;
+  transform: translateX(-50%);
+}
+.case-banner__sticker {
+  position: absolute;
+  top: calc(var(--y) * var(--u));
+  left: calc(var(--x) * var(--u));
+  width: calc(var(--w) * var(--u));
+  height: calc(var(--h) * var(--u));
+  transform: translate(-50%, -50%) var(--t);
+}
+.case-banner__sticker img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: var(--iw);
+  height: var(--ih);
+  max-width: none;
+}
+/* Claremont Amany DNA frame (Figma 84:11062, 674 × 720). --u is one Figma pixel.
+   The helix is pre-flattened onto the navy, so the grid is laid over it with
+   "lighten": grid lines show on the navy and disappear behind the brighter helix. */
+.case-dna {
+  --u: calc(100cqw / 674);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  container-type: inline-size;
+  background: #032449;
+}
+.case-dna > img {
+  position: absolute;
+  display: block;
+  max-width: none;
+}
+.case-dna__helix {
+  top: calc(362.77 * var(--u));
+  left: calc(341.56 * var(--u));
+  width: calc(1120 * var(--u));
+  height: calc(972.6 * var(--u));
+  transform: translate(-50%, -50%) rotate(-45deg);
+  animation: dna-drift 9s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.case-dna__grid {
+  top: calc(-665 * var(--u));
+  left: calc(-285.22 * var(--u));
+  width: calc(2868.5 * var(--u));
+  height: calc(1433.06 * var(--u));
+  mix-blend-mode: lighten;
+  pointer-events: none;
+}
+/* The helix slides gently along its own axis, turning and swelling slightly */
+@keyframes dna-drift {
+  from {
+    transform: translate(-50%, -50%) rotate(-46deg) translateX(calc(-22 * var(--u))) scale(1);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-44deg) translateX(calc(22 * var(--u))) scale(1.04);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .case-dna__helix {
+    animation: none;
+  }
+}
+@media (max-width: 900px) {
+  .tag {
+    font-size: 14px;
+  }
+  .case-header,
+  .case-chapter {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .case-header__main,
+  .case-intro,
+  .case-chapter__head,
+  .case-chapter__body {
+    flex: none;
+  }
+  .case-intro,
+  .case-chapter__body {
+    padding-top: 0;
+  }
+  .case-title {
+    font-size: clamp(32px, 8vw, 56px);
+    letter-spacing: -0.02em;
+  }
+  .case-intro,
+  .case-chapter__body p {
+    font-size: 16px;
+  }
+  .case-figure--hero {
+    margin-top: 40px;
+  }
+  .case-media {
+    aspect-ratio: 4 / 3;
+  }
+  .case-figure--full,
+  .case-pair,
+  .case-chapter,
+  .case-carousel,
+  .case-quote,
+  .case-credits {
+    margin-top: 88px;
+  }
+  .case-meta,
+  .case-credits__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .case-chapter__title {
+    font-size: clamp(28px, 6vw, 40px);
+  }
+  .case-pair,
+  .case-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Palette on phones: orange across the top, mint beside the stacked pair */
+  .case-palette {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 180px 260px;
+    gap: 12px;
+    aspect-ratio: auto;
+  }
+  .case-palette .swatch:first-child {
+    grid-column: 1 / -1;
+  }
+  .case-palette__stack {
+    gap: 12px;
+  }
+  .swatch {
+    gap: 8px;
+    padding: 20px;
+  }
+  .swatch__name {
+    font-size: 18px;
+  }
+  .swatch__hex {
+    font-size: 14px;
+  }
+  /* Edge-to-edge images can be taller on phones, cropped around a focal point */
+  .case-media.case-media--mobile-crop {
+    aspect-ratio: auto !important;
+    height: var(--m-height);
+  }
+  .case-media--mobile-crop > img {
+    object-position: var(--m-position);
+  }
+  /* Slowly pan from the left edge to the right edge and back */
+  .case-media--pan > img {
+    animation: case-pan 14s ease-in-out infinite alternate;
+  }
+  .case-cards {
+    margin-top: 88px;
+  }
+  .case-quote p,
+  .case-statement {
+    font-size: clamp(28px, 7vw, 56px);
+    letter-spacing: -0.03em;
+  }
+  .case-statement {
+    margin-top: 72px;
+  }
+  .case-list li {
+    font-size: 16px;
+  }
+  /* Product strip on phones: a shorter frame sized so two cards fit across
+     (two cards + gap = 686 design px against the 720 design height). Capped on
+     wider screens so the strip doesn't grow too tall. */
+  .case-media.case-shop {
+    aspect-ratio: auto;
+    height: min(440px, calc((100vw - 2 * var(--gutter)) * 720 / 686));
+  }
+  .case-press {
+    --logo-scale: 0.72;
+    gap: 48px;
+    margin-top: 72px;
+    padding: 48px 0;
+  }
+  .case-press__row {
+    gap: 28px 32px;
+  }
+  .case-chapter.case-chapter--continued {
+    margin-top: 48px;
+  }
+  .case-chapter--continued .case-chapter__head {
+    display: none;
+  }
+  .case-stats {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .case-stats strong {
+    font-size: 56px;
+  }
+  .case-next {
+    margin-top: 88px;
+    padding: 56px var(--gutter) 72px;
+  }
+  @keyframes case-pan {
+    0%, 12% {
+      object-position: 0% 50%;
+    }
+
+    88%, 100% {
+      object-position: 100% 50%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .case-banner__frame {
+    --u: calc(100cqw / 375);
+    aspect-ratio: 375 / 481;
+  }
+
+  .case-banner__title {
+    top: calc(var(--m-top) * var(--u));
+    width: calc(var(--m-width) * var(--u));
+    font-size: calc(var(--m-size) * var(--u));
+  }
+
+  .case-banner__sticker {
+    top: calc(var(--my) * var(--u));
+    left: calc(var(--mx) * var(--u));
+    width: calc(var(--mw) * var(--u));
+    height: calc(var(--mh) * var(--u));
+    transform: translate(-50%, -50%) var(--mt);
+  }
+}
+
+/* ============================================================
+   Portfolio type system, applied over the ported layout
+
+   The studio site sets everything in Inter on a dark ground. Here the
+   headings take the portfolio's Nanum Myeongjo, running copy takes Geist at
+   325, and labels keep Fragment Mono — the same three voices as the landing
+   page.
+   ============================================================ */
+.case-title,
+.case-chapter__title,
+.case-statement,
+.case-quote p,
+.case-stats strong,
+.case-next__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--color-ink);
+}
+
+.case-title { letter-spacing: -2.24px; }
+.case-chapter__title { letter-spacing: -1.6px; }
+.case-statement,
+.case-quote p { letter-spacing: -2.24px; }
+
+.case-intro,
+.case-chapter__body p,
+.case-list li,
+.case-meta dd,
+.case-credits dd,
+.case-stats span {
+  font-family: var(--font-sans);
+  font-weight: 325;
+  letter-spacing: var(--ls-desc);
+  color: var(--color-body);
+}
+
+.case-meta dd,
+.case-credits dd { color: var(--color-ink); }
+
+.case-kicker { color: var(--color-muted); }
+.case-chapter__head .case-kicker { color: var(--color-accent); }
+
+.swatch__hex { font-family: var(--font-mono); }
+
+@media (max-width: 1024px) {
+  .case { padding-top: 132px; }
+}
+
+@media (max-width: 768px) {
+  .case {
+    --gutter: 24px;
+    padding-top: 116px;
+  }
+
+  .case-back { margin-bottom: 32px; }
+  .case-title { letter-spacing: -1.2px; }
+  .case-statement,
+  .case-quote p { letter-spacing: -1.2px; }
+  .case-chapter__title { letter-spacing: -0.9px; }
+  .case-visit { align-self: stretch; }
+}

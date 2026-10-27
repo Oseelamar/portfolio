@@ -632,6 +632,11 @@ a { color: inherit; text-decoration: none; }
 /* Figma gives the first card slightly looser spacing than the other seven. */
 .project--lead { gap: 28px; }
 
+/* The last row holds a single project. Without this it would stretch across
+   the full grid width and read as a different kind of card. */
+.projects__row--solo { justify-content: flex-start; }
+.projects__row--solo .project { flex: 0 1 calc(50% - 16.5px); }
+
 .project__image {
   display: block;
   width: 100%;
@@ -1301,6 +1306,7 @@ a { color: inherit; text-decoration: none; }
   .projects__grid { gap: 96px; }
 
   .projects__row { gap: 24px; }
+  .projects__row--solo .project { flex-basis: calc(50% - 12px); }
 
   .project__name {
     font-size: 30px;
@@ -1415,6 +1421,8 @@ a { color: inherit; text-decoration: none; }
     align-items: stretch;
     gap: 56px;
   }
+
+  .projects__row--solo .project { flex: 1 0 0; }
 
   .project__heading,
   .project--lead .project__heading {
@@ -1737,12 +1745,12 @@ a { color: inherit; text-decoration: none; }
         <div class="projects__row">
           <article data-reveal class="project project--lead">
             <div class="project__media">
-              <img class="project__image" srcset="assets/project-claremont-684.webp 684w, assets/project-claremont.webp 1169w" sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1024px) 45vw, 585px" loading="lazy" decoding="async" src="assets/project-claremont.webp" alt="Claremont Armani website design" width="1169" height="723">
+              <img class="project__image" srcset="assets/project-claremont-684.webp 684w, assets/project-claremont.webp 1169w" sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1024px) 45vw, 585px" loading="lazy" decoding="async" src="assets/project-claremont.webp" alt="Claremont Amany website design" width="1169" height="723">
             </div>
             <div class="project__info">
               <div class="project__heading">
-                <h3 class="project__name">Claremont Armani</h3>
-                <a class="project__link" href="https://claremontamany.com/" target="_blank" rel="noopener noreferrer">VISIT SITE<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+                <h3 class="project__name">Claremont Amany</h3>
+                <a class="project__link" href="work/claremont-amany/">SEE CASE STUDY<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
               </div>
               <ul class="project__tags">
                 <li class="project__tag">2026</li>
@@ -1759,7 +1767,7 @@ a { color: inherit; text-decoration: none; }
             <div class="project__info">
               <div class="project__heading">
                 <h3 class="project__name">Monazeni</h3>
-                <a class="project__link" href="https://monazeni.com/" target="_blank" rel="noopener noreferrer">VISIT SITE<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+                <a class="project__link" href="work/monazeni/">SEE CASE STUDY<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
               </div>
               <ul class="project__tags">
                 <li class="project__tag">2026</li>
@@ -1795,7 +1803,7 @@ a { color: inherit; text-decoration: none; }
             <div class="project__info">
               <div class="project__heading">
                 <h3 class="project__name">Nookly</h3>
-                <a class="project__link" href="https://nookly.com/" target="_blank" rel="noopener noreferrer">VISIT SITE<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+                <a class="project__link" href="work/nookly/">SEE CASE STUDY<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
               </div>
               <ul class="project__tags">
                 <li class="project__tag">2025</li>
@@ -1850,7 +1858,7 @@ a { color: inherit; text-decoration: none; }
             <div class="project__info">
               <div class="project__heading">
                 <h3 class="project__name">Glint</h3>
-                <a class="project__link" href="https://www.behance.net/gallery/231883305/Glint-Crypto-wallet-powered-by-chain-abstraction?platform=direct" target="_blank" rel="noopener noreferrer">SEE CASE STUDY<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+                <a class="project__link" href="work/glint/">SEE CASE STUDY<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
               </div>
               <ul class="project__tags">
                 <li class="project__tag">2025</li>
@@ -1872,6 +1880,25 @@ a { color: inherit; text-decoration: none; }
               <ul class="project__tags">
                 <li class="project__tag">2025</li>
                 <li class="project__tag">EDUCATION TECH</li>
+                <li class="project__tag">WEBSITE DESIGN</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="projects__row projects__row--solo">
+          <article data-reveal class="project">
+            <div class="project__media">
+              <img class="project__image" srcset="assets/project-objects-684.webp 684w, assets/project-objects.webp 1169w" sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1024px) 45vw, 585px" loading="lazy" decoding="async" src="assets/project-objects.webp" alt="Objects store design" width="1169" height="831">
+            </div>
+            <div class="project__info">
+              <div class="project__heading">
+                <h3 class="project__name">Objects</h3>
+                <a class="project__link" href="work/objects/">SEE CASE STUDY<img class="project__arrow" src="assets/icon-arrow.svg" alt="" aria-hidden="true"></a>
+              </div>
+              <ul class="project__tags">
+                <li class="project__tag">2026</li>
+                <li class="project__tag">LIFESTYLE E-COMMERCE</li>
                 <li class="project__tag">WEBSITE DESIGN</li>
               </ul>
             </div>
