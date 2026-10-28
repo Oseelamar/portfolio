@@ -211,59 +211,6 @@ a { color: inherit; text-decoration: none; }
   height: 20px;
 }
 /* ============================================================
-   Block: cta
-   ============================================================ */
-/* Figma draws the stroke inside the frame bounds, so an inset ring is used
-   instead of a border, which would add 2px to the button's width and height. */
-.cta {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 1px;
-  border-radius: var(--radius-pill);
-  box-shadow: inset 0 0 0 1px var(--color-accent-border);
-}
-.cta__inner {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-7);
-  border-radius: var(--radius-pill-inner);
-  background-color: var(--color-accent);
-  box-shadow: var(--shadow-cta);
-}
-/* Figma pairs the two buttons on one row, 20px apart. */
-.cta-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-/* Secondary: flat taupe pill — no accent ring, no dot, no inset highlight. */
-.cta--secondary { box-shadow: none; }
-.cta--secondary .cta__inner {
-  background-color: var(--color-accent-muted);
-  box-shadow: none;
-}
-.cta__dot {
-  flex-shrink: 0;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background-color: var(--color-dot-light);
-}
-.cta__label {
-  font-family: var(--font-mono);
-  font-weight: 400;
-  font-size: var(--fs-body);
-  line-height: normal;
-  color: var(--color-on-accent);
-  white-space: nowrap;
-}
-/* ============================================================
    Block: footer
    ============================================================ */
 .footer {
@@ -334,11 +281,6 @@ a { color: inherit; text-decoration: none; }
 .footer__social a { transition: opacity 200ms ease; }
 .navbar__social a:hover,
 .footer__social a:hover { opacity: 0.6; }
-.cta__inner { transition: transform 250ms ease, filter 250ms ease; }
-.cta:hover .cta__inner {
-  transform: translateY(-1px);
-  filter: brightness(1.04);
-}
 @media (prefers-reduced-motion: reduce) {
   .navbar__link,
   .project__link,
@@ -433,7 +375,6 @@ a { color: inherit; text-decoration: none; }
   .navbar {
     width: calc(100% - 32px);
   }
-  .cta__inner { padding: 14px var(--space-7); }
   /* Phone footer stacks and centres, socials above the credit line. */
   .footer {
     flex-direction: column-reverse;
@@ -489,37 +430,6 @@ a { color: inherit; text-decoration: none; }
   transform: rotate(180deg);
 }
 
-/* Tag pills, matching the project cards on the landing page */
-.tags {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tag {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  border-radius: 30px;
-  background-color: var(--color-tag-surface);
-  font-family: var(--font-mono);
-  font-weight: 400;
-  font-size: var(--fs-nav);
-  line-height: normal;
-  color: var(--color-tag-text);
-  white-space: nowrap;
-}
-
-/* "Visit site" sits with the project facts, in the landing page's CTA shape */
-.case-visit {
-  align-self: flex-start;
-  margin-top: 48px;
-}
 
 /* Header: tags + title on the left, intro on the right */
 .case-header {
@@ -533,9 +443,6 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   gap: 20px;
   flex: 0 1 656px;
-}
-.case-header .tag {
-  border-radius: 20px;
 }
 .case-title {
   margin: 0;
@@ -877,31 +784,6 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.32px;
   text-transform: uppercase;
 }
-/* Project facts */
-.case-meta {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 24px 12px;
-  margin: 40px 0 0;
-}
-.case-meta__item {
-  padding-top: 16px;
-  border-top: 1px solid var(--case-rule);
-}
-.case-meta dt,
-.case-credits dt {
-  color: var(--color-muted);
-  font-family: var(--font-mono);
-  font-size: 14px;
-  letter-spacing: 0.14px;
-  text-transform: uppercase;
-}
-.case-meta dd,
-.case-credits dd {
-  margin: 8px 0 0;
-  font-size: 18px;
-  line-height: 1.4;
-}
 /* Chapters: number + heading left, copy right (same columns as the header) */
 .case-chapter {
   display: flex;
@@ -1168,9 +1050,6 @@ a { color: inherit; text-decoration: none; }
   }
 }
 @media (max-width: 900px) {
-  .tag {
-    font-size: 14px;
-  }
   .case-header,
   .case-chapter {
     flex-direction: column;
@@ -1208,7 +1087,6 @@ a { color: inherit; text-decoration: none; }
   .case-credits {
     margin-top: 88px;
   }
-  .case-meta,
   .case-credits__list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1360,7 +1238,6 @@ a { color: inherit; text-decoration: none; }
 .case-intro,
 .case-chapter__body p,
 .case-list li,
-.case-meta dd,
 .case-credits dd,
 .case-stats span {
   font-family: var(--font-sans);
@@ -1369,7 +1246,6 @@ a { color: inherit; text-decoration: none; }
   color: var(--color-body);
 }
 
-.case-meta dd,
 .case-credits dd { color: var(--color-ink); }
 
 .case-kicker { color: var(--color-muted); }
@@ -1392,5 +1268,4 @@ a { color: inherit; text-decoration: none; }
   .case-statement,
   .case-quote p { letter-spacing: -1.2px; }
   .case-chapter__title { letter-spacing: -0.9px; }
-  .case-visit { align-self: stretch; }
 }
